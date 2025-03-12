@@ -50,14 +50,14 @@ const chartConfig2 = {
 const CustomLineChart = () => {
     return (
         <Card className='rounded-2xl shadow-xl p-[1.5rem]'>
-            <CardHeader className='text-xl font-semibold font-primary'>
+            <CardHeader className='text-xl font-bold font-primary'>
                 Application Status Growth Over Time
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig2} className=' h-[250px] w-full'>
                     <LineChart accessibilityLayer data={lineChartData} margin={{ left: 12, right: 12 }}>
                         <CartesianGrid vertical={false} />
-                        <XAxis className='font-primary' dataKey='month' tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
+                        <XAxis className='font-secondary font-semibold' dataKey='month' tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                         <Line dataKey='Pending' type='natural' stroke='#ffb403' strokeWidth={2} dot={false} />
                         <Line dataKey='Initial Interview' type='natural' stroke='#a4aab6' strokeWidth={2} dot={false} />

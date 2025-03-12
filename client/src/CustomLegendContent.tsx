@@ -16,7 +16,7 @@ const CustomLegendContent = (props: any) => {
               backgroundColor: entry.color,
             }}
           ></div>
-          <span className='font-primary font-semibold'>{entry.value}</span>
+          <span className='font-secondary font-semibold'>{entry.value}</span>
         </div>
       ))}
     </div>

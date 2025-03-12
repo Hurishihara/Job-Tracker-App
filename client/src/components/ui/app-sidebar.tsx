@@ -52,7 +52,7 @@ export function AppSidebar() {
                 <Avatar>
                     <AvatarImage src={image1} className='' />
                 </Avatar>
-                <div className='font-secondary'>
+                <div className='font-primary'>
                     Sync
                 </div>
             </div>
@@ -60,7 +60,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className='gap-[1.5rem]'>
               {items.map((item) => (
-                <SidebarMenuItem className='font-secondary text-gray-500' key={item.title}>
+                <SidebarMenuItem className='font-primary text-gray-500' key={item.title}>
                   <SidebarMenuButton className='p-[1.5rem]' asChild>
                     <a href={item.url}>
                       <item.icon style={{ width: 20, height: 20 }} strokeWidth={2} />

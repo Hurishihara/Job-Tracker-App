@@ -1,17 +1,20 @@
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 export type JobApplication = {
     id: string,
-    companyName: string,
-    jobTitle: string,
+    'Company Name': string,
+    'Job Title': string,
     status: 'Pending' | 'Initial Interview' | 'Final Interview' | 'Job Offer' | 'Rejected',
     location: string,
-    applicationDate: string,
-    interviewDate: string,
-    jobType: string,
-    applicationMethod: string,
-    jobLink: string,
+    'Application Date': string,
+    'Interview Date': string,
+    'Job Type': string,
+    'Application Method': string,
+    'Job Link': string,
     notes: string,
 }
 
@@ -34,22 +37,28 @@ const badgeColors = (status: string) => {
 
 export const columns: ColumnDef<JobApplication>[] = [
     {
-        accessorKey: 'companyName',
-        header: () => <div className='font-secondary font-bold'> Company Name </div>,
+        accessorKey: 'Company Name',
+        header: () => <div className='font-primary font-bold'> Company Name </div>,
         cell: ({ row }) => {
-            return <div className='font-primary font-semibold text-md'> {row.getValue('companyName')} </div>
+            return <div className='font-secondary font-semibold text-md'> {row.getValue('Company Name')} </div>
         } 
     },
     {
-        accessorKey: 'jobTitle',
-        header: () => <div className='font-secondary font-bold'> Job Title </div>,
+        accessorKey: 'Job Title',
+        header: () => <div className='font-primary font-bold'> Job Title </div>,
         cell: ({ row }) => {
-            return <div className='font-primary'> {row.getValue('jobTitle')} </div>
+            return <div className='font-secondary'> {row.getValue('Job Title')} </div>
         } 
     },
     {
         accessorKey: 'status',
-        header: () => <div className='font-secondary font-bold'> Status </div>,
+        header: ({ column }) => {
+            return (
+                <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Status <ArrowUpDown className=' h-4 w-4' />
+                </Button>
+            )
+        },
         cell: ({ row }) => {
             const status = row.getValue('status') as string
             const badgeStyle = {
@@ -61,56 +70,79 @@ export const columns: ColumnDef<JobApplication>[] = [
                   status === 'Rejected' ? 'rgba(254, 56, 57, 0.6)' : '#ccc',
                   
               };
-            return <Badge style={badgeStyle} className='font-primary font-semibold text-md text-black  rounded-[1rem]'>{status}</Badge>
+            return <Badge style={badgeStyle} className='font-secondary font-semibold text-md text-black  rounded-[1rem]'>{status}</Badge>
         } 
     },
     {
         accessorKey: 'location',
-        header: () => <div className='font-secondary font-bold'> Location </div>,
+        header: () => <div className='font-primary font-bold'> Location </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('location')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('location')} </div>
         } 
     },
     {
-        accessorKey: 'applicationDate',
-        header: () => <div className='font-secondary font-bold'> Application Date </div>,
+        accessorKey: 'Application Date',
+        header: () => <div className='font-primary font-bold'> Application Date </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('applicationDate')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('Application Date')} </div>
         } 
     },
     {
-        accessorKey: 'interviewDate',
-        header: () => <div className='font-secondary font-bold'> Interview Date </div>,
+        accessorKey: 'Interview Date',
+        header: () => <div className='font-primary font-bold'> Interview Date </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('interviewDate')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('Interview Date')} </div>
         }
     },
     {
-        accessorKey: 'jobType',
-        header: () => <div className='font-secondary font-bold'> Job Type </div>,
+        accessorKey: 'Job Type',
+        header: () => <div className='font-primary font-bold'> Job Type </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('jobType')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('Job Type')} </div>
         } 
     },
     {
-        accessorKey: 'applicationMethod',
-        header: () => <div className='font-secondary font-bold'> Application Method </div>,
+        accessorKey: 'Application Method',
+        header: () => <div className='font-primary font-bold'> Application Method </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('applicationMethod')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('Application Method')} </div>
         }
     },
     {
-        accessorKey: 'jobLink',
-        header: () => <div className='font-secondary font-bold'> Job Link </div>,
+        accessorKey: 'Job Link',
+        header: () => <div className='font-primary font-bold'> Job Link </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('jobLink')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('Job Link')} </div>
         } 
     },
     {
         accessorKey: 'notes',
-        header: () => <div className='font-secondary font-bold'> Notes </div>,
+        header: () => <div className='font-primary font-bold'> Notes </div>,
         cell: ({ row }) => {
-            return <div className='font-primary text-md'> {row.getValue('notes')} </div>
+            return <div className='font-secondary text-md'> {row.getValue('notes')} </div>
         }
     },
+    {
+        accessorKey: 'actions',
+        header: () => <div> </div>,
+        cell: ({ row }) =>  {
+            const jobApplication = row.original
+            
+            return (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant='ghost' className='h-8 w-8 p-0'>
+                            <span className='sr-only'> Open Menu</span>
+                            <MoreHorizontal className='h-4 w-4' />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align='start'>
+                        <DropdownMenuLabel> Actions </DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => console.log('Edit', jobApplication)}> Edit </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => console.log('Delete', jobApplication)}> Delete </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            )
+        }
+    }
 ]

@@ -44,7 +44,7 @@ const CustomPieChart = () => {
 
     return (
         <Card className='rounded-2xl shadow-xl' >
-            <CardHeader className='text-xl font-semibold font-secondary'>
+            <CardHeader className='text-xl font-bold font-primary'>
                 Application by Status
             </CardHeader>
             <div className='grid grid-cols-12 items-center justify-items-center gap-0 w-full p-[1.5rem]'>
@@ -98,9 +98,9 @@ const CustomPieChart = () => {
                         {chartData2.map(({ status, applications, fill }) => (
                             <li key={status} className='flex flex-row items-center gap-1 p-[0.5rem]'>
                                 <div className='w-2 h-2 rounded-full mr-3' style={{ backgroundColor: fill }} />
-                                <span className='text-md font-semibold font-primary'>{status}</span>
+                                <span className='text-md font-semibold font-secondary'>{status}</span>
                                 <span className='mx-2 border-b-2 border-dotted border-gray-300 w-20' />
-                                <span className='text-md font-medium font-semibold font-primary'> {applications} </span>
+                                <span className='text-md font-medium font-semibold font-secondary'> {applications} </span>
                             </li>
                         ))}
                     </ul>
