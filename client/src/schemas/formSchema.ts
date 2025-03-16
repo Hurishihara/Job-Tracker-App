@@ -14,7 +14,7 @@ export const registerSchema = z.object({
 
 export const createJobApplicationSchema = z.object({
     companyName: z.string().trim().min(1, 'Company name is required').max(60, 'Company name must be at most 60 characters long'),
-    jobTitle: z.string().trim().min(1, 'Job title is required').max(20, 'Job title must be at most 20 characters long'),
+    jobTitle: z.string().trim().min(1, 'Job title is required').max(30, 'Job title must be at most 20 characters long'),
     status: z.enum(['Pending', 'Initial Interview', 'Final Interview', 'Job Offer', 'Rejected']),
     location: z.string().trim().min(1, 'Location is required').max(100, 'Location must be at most 100 characters long'),
     applicationDate: z.date().optional(),
