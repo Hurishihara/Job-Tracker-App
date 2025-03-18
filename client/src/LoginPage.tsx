@@ -10,10 +10,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from './components/
 import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
+import { authClient } from './util/auth-client'
+import { redirect, useNavigate } from 'react-router-dom'
+import { api } from './util/axios-config'
 
 
 const LoginPage = () => {
-
+    const navigate = useNavigate();
     const form = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -22,8 +25,23 @@ const LoginPage = () => {
         }
     })
 
-    const handleOnSubmit = (values: z.infer<typeof loginSchema>) => {
-        console.log(values)
+    const handleOnSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
+        try {
+            const session = await authClient.getSession();
+            if(session?.data?.user) {
+                navigate('/')
+                return;
+            }
+            const response = await api.post('/auth/sign-in', { email, password })
+            console.log('Response:', response)
+            if (response.status === 200) {
+                navigate('/')
+            }
+        }
+        catch (err) {
+            console.error('Catch err', err)
+            console.log('Error signing in')
+        }
     }
 
   return (

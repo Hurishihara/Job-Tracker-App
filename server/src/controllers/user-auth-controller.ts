@@ -1,64 +1,81 @@
 import Elysia, { t } from 'elysia';
-import { UserAuthService } from '../services/user-auth-service';
-import { createInsertSchema } from 'drizzle-typebox';
-import { table } from '../db/schema';
-import { UtilJWT } from '../utils/jwt';
+import { auth } from '../utils/auth';
+import { BetterAuthError } from 'better-auth';
+import { BadRequestError, InternalServerError, UnauthorizedError } from '../utils/error';
 
-export const _createUser = createInsertSchema(table.UsersTable, {
-    firstName: t.String(),
-    lastName: t.String(),
-    email: t.String({ format: 'email'}),
-    password: t.String()
-})
 
-export const UserAuthController = new Elysia({ name: 'Controller.UserAuth' })
-    .use(UtilJWT)
-    .use(UserAuthService)
-    .post('/register', async ({ createUser, body, set }) => {
+
+export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/auth' })
+    .post('/sign-in', async ({ body, set, }) => {
         try {
-            const res = await createUser(body);
-            set.status = 201;
-            return res;
+            const { email, password } = body;
+            const { headers, response } = await auth.api.signInEmail({
+                body: {
+                    email,
+                    password
+                },
+                returnHeaders: true,
+            });
+            const cookies = headers.get('set-cookie');
+            set.status = 200;
+            if (cookies) {
+                set.headers['set-cookie'] = cookies;
+            }
+            return response;
         }
-        catch (err) {
-            console.error(err);
-            set.status = 500;
-        }
-    }, {
-        body: t.Omit(_createUser, ['id']),
-    })
-    .post('/login', async ({ jwt, loginUser, body, set, cookie: { auth }, }) => {
-        try {
-            const res = await loginUser(body);
-            if (res.data?.id) {
-                const value = await jwt.sign({ userId: res.data.id });
-                auth.set({
-                    value,
-                    httpOnly: true,
-                    secure: false,
-                    sameSite: 'strict',
-                    maxAge: 60000,
-                    path: '/'
-                })
-                set.status = 200;
-                return res;
+        catch (err: unknown) {
+            if (err instanceof BetterAuthError || err instanceof Error) {
+                if (err.message === 'Invalid email or password' || err.message === 'User not found') {
+                    throw new UnauthorizedError('Invalid email or password', 'Unauthorized');
+                }
+                throw new InternalServerError('Something went wrong', 'Internal Server Error');
             }
         }
-        catch (err) {
-            console.error(err);
-            set.status = 500;
+    }, {
+        body: t.Object({
+            email: t.String({ format: 'email', error() {
+                throw new BadRequestError('Invalid email', 'Bad Request')
+            } }),
+            password: t.String({ minLength: 7, maxLength: 50, error() {
+                throw new BadRequestError('Password must be at least 7 characters and at most 50 characters', 'Bad Request')
+            } })
+        }),
+        detail: {
+            summary: 'Sign in to the application',
+            description: 'Authenticate a user and return a token',
+            tags: ['Authentication']
+        }
+    })
+    .post('/sign-up', async ({ body, set }) => {
+        try {
+            const { email, password, username } = body;
+            const user = await auth.api.signUpEmail({ body: { email, password, name: username, image: '' }});
+            set.status = 201;
+            return user;
+        }
+        catch (err: unknown) {
+            if (err instanceof BetterAuthError || err instanceof Error) {
+                if (err.message === 'User already exists') {
+                    throw new BadRequestError('Email already exists', 'Bad Request')
+                }
+                console.log('Error:', err)
+            }
         }
     }, {
-        body: t.Pick(_createUser, ['email', 'password'])
-    })
-    .post('/logout', async ({ set, cookie: { auth }}) => {
-        auth.set({
-            value: '',
-            httpOnly: true,
-            path: '/',
-            secure: false,
-            sameSite: 'strict'
-        })
-        set.status = 200;
-        return { message: 'User logged out successfully' };
+        body: t.Object({
+            email: t.String({ format: 'email', error() {
+                throw new BadRequestError('Invalid email', 'Bad Request')
+            } }),
+            password: t.String({ minLength: 7, maxLength: 50, error() {
+                throw new BadRequestError('Password must be at least 7 characters and at most 50 characters', 'Bad Request')
+            } }),
+            username: t.String({ minLength: 3, maxLength: 50, error() {
+                throw new BadRequestError('Username must be at least 3 characters and at most 50 characters', 'Bad Request')
+            } })
+        }),
+        detail: {
+            summary: 'Sign up for the application',
+            description: 'Create a new user account',
+            tags: ['Authentication']
+        }
     })

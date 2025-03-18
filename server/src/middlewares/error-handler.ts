@@ -10,6 +10,8 @@ export const ErrorHandler = new Elysia({ name: 'Middleware.ErrorHandler' })
         InternalServerError
     })
     .decorate('handleError', ({ code, error, set }: any) => {
+        console.log('----------code', code)
+        console.log('----------error', error)
         const errorName = error?.name ?? 'Error';
         const errorMessage = error?.message ?? 'Something went wrong';
         switch (code) {

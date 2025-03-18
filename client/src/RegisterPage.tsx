@@ -10,20 +10,43 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from './components/
 import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
+import { authClient } from './util/auth-client'
 
 const RegisterPage = () => {
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
         email: '',
-        firstName: '',
-        lastName: '',
+        username: '',
         password: '',
     }
   })
 
-  const handleOnSubmit = (values: z.infer<typeof registerSchema>) => {
-    console.log(values)
+  const handleOnSubmit = async ({ username, email, password }: z.infer<typeof registerSchema>) => {
+    console.log('Forms', username, email, password)
+    try {
+        const { data, error } = await authClient.signUp.email({
+            email,
+            password,
+            name: username,
+            image: '',
+        }, {
+            onRequest: (ctx) => {
+                console.log('Request', ctx)
+            },
+            onSuccess: (ctx) => {
+                console.log('Success', ctx)
+            },
+            onError: (ctx) => {
+                console.log('Error', ctx)
+                console.log('Error creating account')
+            }
+        });
+    }
+    catch (err) {
+        console.error('Catch err', err)
+        console.log('Error creating account')
+    }
   }
 
   return (
@@ -45,21 +68,12 @@ const RegisterPage = () => {
                                 <div className='p-[2rem]'>
                                     <form id='login-form' onSubmit={form.handleSubmit(handleOnSubmit)}>
                                         <div className='flex flex-col gap-[1rem]'>
-                                        <FormField control={form.control} name='firstName' render={({ field }) => (
+                                        <FormField control={form.control} name='username' render={({ field }) => (
                                                 <FormItem className='relative'>
                                                     <FormControl>
                                                         <Input className='p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., Michael Robert' type='text'  {...field} />
                                                     </FormControl>
-                                                    <FormLabel className={cn('peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>First Name</FormLabel>
-                                                </FormItem>
-                                        )}
-                                        />
-                                        <FormField control={form.control} name='lastName' render={({ field }) => (
-                                                <FormItem className='relative'>
-                                                    <FormControl>
-                                                        <Input className='p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., Smith' type='text'  {...field} />
-                                                    </FormControl>
-                                                    <FormLabel className={cn('peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Last Name</FormLabel>
+                                                    <FormLabel className={cn('peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Username</FormLabel>
                                                 </FormItem>
                                         )}
                                         />

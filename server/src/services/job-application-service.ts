@@ -1,7 +1,7 @@
 import Elysia from 'elysia';
 import { CreateJobApplicationDTO } from '../types/job-application-types';
 import { db } from '../db/db';
-import { JobApplicationsTable } from '../db/schema';
+import { jobApplication } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { PgUUID } from 'drizzle-orm/pg-core';
 
@@ -20,7 +20,7 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
         userId
     }: CreateJobApplicationDTO) => {
         try {
-            const res = await db.insert(JobApplicationsTable).values({
+            const res = await db.insert(jobApplication).values({
                 companyName: companyName,
                 jobTitle: jobTitle,
                 jobStatus: jobStatus,
@@ -42,7 +42,7 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
     })
     .decorate('getJobApplications', async (userId: string) => {
         try {
-            const res = await db.select().from(JobApplicationsTable).where(eq(JobApplicationsTable.userId, userId));
+            const res = await db.select().from(jobApplication).where(eq(jobApplication.userId, userId));
             return { message: 'Job applications retrieved successfully', data: res };
         }
         catch (err) {
@@ -55,7 +55,7 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
             if (!body.id) {
                 throw new Error('Job application ID is required for update');
             }
-            const res = await db.update(JobApplicationsTable).set(body).where(eq(JobApplicationsTable.id, body.id as string)).returning();
+            const res = await db.update(jobApplication).set(body).where(eq(jobApplication.id, body.id as string)).returning();
             return { message: 'Job application updated successfully', data: res };
         }
         catch (err) {
@@ -68,7 +68,7 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
             if (!id) {
                 throw new Error('Job application ID is required for deletion');
             }
-            const res = await db.delete(JobApplicationsTable).where(eq(JobApplicationsTable.id, id))
+            const res = await db.delete(jobApplication).where(eq(jobApplication.id, id))
             return { message: 'Job application deleted successfully', data: res };
         }
         catch (err) {

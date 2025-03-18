@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarImage } from "./avatar"
 import image1 from '../../assets/logo1.png'
+import { authClient } from "@/util/auth-client"
+import { useNavigate } from "react-router-dom"
 
 // Menu items.
 const items = [
@@ -44,6 +46,19 @@ const items = [
 ]
 
 export function AppSidebar() {
+
+  const navigate = useNavigate();
+
+  const handleClick = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          navigate('/login')
+        }
+      }
+    })
+  }
+
   return (
     <Sidebar>
       <SidebarContent className='bg-white'>
@@ -62,7 +77,7 @@ export function AppSidebar() {
             <SidebarMenu className='gap-[1.5rem]'>
               {items.map((item) => (
                 <SidebarMenuItem className='font-primary text-gray-500' key={item.title}>
-                  <SidebarMenuButton className='p-[1.5rem]' asChild>
+                  <SidebarMenuButton className='p-[1.5rem]' onClick={handleClick} asChild>
                     <a href={item.url}>
                       <item.icon style={{ width: 20, height: 20 }} strokeWidth={2} />
                       <span className='text-[1.2rem]'>{item.title}</span>
