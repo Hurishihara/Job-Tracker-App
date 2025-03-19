@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings, LayoutDashboard, ChartArea, Briefcase } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, LayoutDashboard, ChartArea, Briefcase, LogOut } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -15,6 +15,7 @@ import { Avatar, AvatarImage } from "./avatar"
 import image1 from '../../assets/logo1.png'
 import { authClient } from "@/util/auth-client"
 import { useNavigate } from "react-router-dom"
+import { Button } from "./button"
 
 // Menu items.
 const items = [
@@ -77,7 +78,7 @@ export function AppSidebar() {
             <SidebarMenu className='gap-[1.5rem]'>
               {items.map((item) => (
                 <SidebarMenuItem className='font-primary text-gray-500' key={item.title}>
-                  <SidebarMenuButton className='p-[1.5rem]' onClick={handleClick} asChild>
+                  <SidebarMenuButton className='p-[1.5rem]' asChild>
                     <a href={item.url}>
                       <item.icon style={{ width: 20, height: 20 }} strokeWidth={2} />
                       <span className='text-[1.2rem]'>{item.title}</span>
@@ -89,7 +90,14 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] bg-white cursor-pointer ' onClick={handleClick}>
+        <div className='flex flex-row items-center text-[1.2rem] gap-2 font-primary text-gray-500 hover:text-black'>
+          <LogOut style={{ width: 20, height: 20 }} strokeWidth={2} />
+          <div>
+            Sign out
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

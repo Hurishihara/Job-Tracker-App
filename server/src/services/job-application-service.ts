@@ -4,33 +4,22 @@ import { db } from '../db/db';
 import { jobApplication } from '../db/schema';
 import { eq } from 'drizzle-orm';
 import { PgUUID } from 'drizzle-orm/pg-core';
+import { User } from 'better-auth/types';
 
 export const JobApplicationService = new Elysia({ name: 'Service.JobApplication' })
-    .decorate('createJobApplication', async ({
-        companyName,
-        jobTitle,
-        jobStatus,
-        location,
-        applicationDate,
-        interviewDate,
-        jobType,
-        applicationMethod,
-        jobLink,
-        notes,
-        userId
-    }: CreateJobApplicationDTO) => {
+    .decorate('createJobApplication', async (body: Omit<CreateJobApplicationDTO, 'id' | 'userId'> , userId: User['id']) => {
         try {
             const res = await db.insert(jobApplication).values({
-                companyName: companyName,
-                jobTitle: jobTitle,
-                jobStatus: jobStatus,
-                location: location,
-                applicationDate: applicationDate,
-                interviewDate: interviewDate,
-                jobType: jobType,
-                applicationMethod: applicationMethod,
-                jobLink: jobLink,
-                notes: notes,
+                companyName: body.companyName,
+                jobTitle: body.jobTitle,
+                jobStatus: body.jobStatus,
+                location: body.location,
+                applicationDate: body.applicationDate,
+                interviewDate: body.interviewDate,
+                jobType: body.jobType,
+                applicationMethod: body.applicationMethod,
+                jobLink: body.jobLink,
+                notes: body.notes,
                 userId: userId
             }).returning()
             return { message: 'Job application created successfully', id: res[0] };
@@ -43,7 +32,21 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
     .decorate('getJobApplications', async (userId: string) => {
         try {
             const res = await db.select().from(jobApplication).where(eq(jobApplication.userId, userId));
-            return { message: 'Job applications retrieved successfully', data: res };
+            return { message: 'Job applications retrieved successfully', data: res.map((jobApp) => {
+                return {
+                    id: jobApp.id,
+                    'Company Name': jobApp.companyName,
+                    'Job Title': jobApp.jobTitle,
+                    'Job Status': jobApp.jobStatus,
+                    location: jobApp.location,
+                    'Application Date': jobApp.applicationDate,
+                    'Interview Date': jobApp.interviewDate,
+                    'Job Type': jobApp.jobType,
+                    'Application Method': jobApp.applicationMethod,
+                    'Job Link': jobApp.jobLink,
+                    notes: jobApp.notes
+                }
+            }) };
         }
         catch (err) {
             console.error(err);

@@ -33,9 +33,9 @@ const LoginPage = () => {
                 return;
             }
             const response = await api.post('/auth/sign-in', { email, password })
-            console.log('Response:', response)
             if (response.status === 200) {
                 navigate('/')
+                return;
             }
         }
         catch (err) {

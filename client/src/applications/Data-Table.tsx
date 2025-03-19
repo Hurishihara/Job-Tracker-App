@@ -40,8 +40,6 @@ export function DataTable<TData, TValue>({
     const [ sorting, setSorting ] = useState<SortingState>([])
     const [ columnFilters, setColumnFilters ] = useState<ColumnFiltersState>([])
     const [ columnVisibility, setColumnVisibility ] = useState<VisibilityState>({})
-    const [ applicationDate, setApplicationDate ] = useState<Date>()
-    const [ interviewDate, setInterviewDate ] = useState<Date>()
     const table = useReactTable({
         data,
         columns,

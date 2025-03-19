@@ -15,6 +15,7 @@ import { z } from "zod"
 import { Form, FormField, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { api } from "@/util/axios-config"
 
 const JobApplicationSheet = () => {
 
@@ -23,7 +24,7 @@ const JobApplicationSheet = () => {
         defaultValues: {
             companyName: '',
             jobTitle: '',
-            status: undefined,
+            jobStatus: undefined,
             location: '',
             applicationDate: undefined,
             interviewDate: undefined,
@@ -37,10 +38,11 @@ const JobApplicationSheet = () => {
 
     const handleJobApplicationSubmit = async (value: JobApplicationData) => {
         const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
-        
+        console.log(value)
         try {
             await delay(2000);
-            console.log(value)
+            const res = await api.post('/job-application/create-job-application', value)
+            console.log(res)
         }
         catch (err) {
             if (err instanceof z.ZodError) {
@@ -104,7 +106,7 @@ const JobApplicationSheet = () => {
                                         </div>
                                     </>
                                 )} />
-                                <FormField control={form.control} name='status' render={({ field }) => (
+                                <FormField control={form.control} name='jobStatus' render={({ field }) => (
                                     <>
                                         <Label htmlFor='status' className='text-md font-tertiary font-medium col-span-4'>
                                             Status
@@ -180,7 +182,7 @@ const JobApplicationSheet = () => {
                                 <FormField control={form.control} name='jobType' render={({ field }) => (
                                     <>
                                         <Label htmlFor='jobType' className='text-md font-tertiary font-medium col-span-4'>
-                                            Status
+                                            Job Type
                                         </Label>
                                         <Select disabled={form.formState.isSubmitting} onValueChange={field.onChange} defaultValue={field.value}>
                                             <SelectTrigger className='w-[17rem] col-span-8 font-tertiary font-medium'>

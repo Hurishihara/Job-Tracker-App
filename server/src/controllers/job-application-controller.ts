@@ -44,8 +44,8 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
                 throw new UnauthorizedError('Please log in to create a job application', 'Unauthorized');
                 
             }
-            body.userId = user.id;
-            const res = await createJobApplication(body);
+            console.log('-------body', body)
+            const res = await createJobApplication(body, user.id);
             set.status = StatusCodes.CREATED
             return res;
         }
@@ -54,7 +54,7 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             throw new InternalServerError('Something went wrong', 'Internal Server Error');
         }
     }, {
-        body: t.Omit(_createJobApplication, ['id']),
+        body: t.Omit(_createJobApplication, ['id', 'userId']),
         auth: true,
         detail: {
             summary: 'Create a job application',
@@ -67,12 +67,14 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             if (!user) {
                 throw new UnauthorizedError('Please log in to get job applications', 'Unauthorized');
             }
+
             const res = await getJobApplications(user.id);
+            set.status = StatusCodes.OK;
             return res;
             }
         catch (err) {
             console.error('Error in JobApplicationController:', err);
-            throw err
+            throw new InternalServerError('Something went wrong', 'Internal Server Error');
         }
     }, {
         auth: true,

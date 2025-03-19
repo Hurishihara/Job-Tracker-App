@@ -6,7 +6,7 @@ import { BadRequestError, InternalServerError, UnauthorizedError } from '../util
 
 
 export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/auth' })
-    .post('/sign-in', async ({ body, set, }) => {
+    .post('/sign-in', async ({ body, set }) => {
         try {
             const { email, password } = body;
             const { headers, response } = await auth.api.signInEmail({

@@ -2,13 +2,14 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { ColumnDef } from "@tanstack/react-table"
+import { formatDate } from "date-fns"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 
 export type JobApplication = {
     id: string,
     'Company Name': string,
     'Job Title': string,
-    status: 'Pending' | 'Initial Interview' | 'Final Interview' | 'Job Offer' | 'Rejected',
+    'Job Status': 'Pending' | 'Initial Interview' | 'Final Interview' | 'Job Offer' | 'Rejected',
     location: string,
     'Application Date': string,
     'Interview Date': string,
@@ -16,23 +17,6 @@ export type JobApplication = {
     'Application Method': string,
     'Job Link': string,
     notes: string,
-}
-
-const badgeColors = (status: string) => {
-    switch (status) {
-        case 'Pending':
-            return '#ffb403'
-        case 'Initial Interview':
-            return '#a4aab6'
-        case 'Final Interview':
-            return '#2cccfe'
-        case 'Job Offer':
-            return '#57f000'
-        case 'Rejected':
-            return '#fe3839'
-        default:
-            return 'bg-gray-400 text-black'
-    }
 }
 
 export const columns: ColumnDef<JobApplication>[] = [
@@ -51,7 +35,7 @@ export const columns: ColumnDef<JobApplication>[] = [
         } 
     },
     {
-        accessorKey: 'status',
+        accessorKey: 'Job Status',
         header: ({ column }) => {
             return (
                 <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -60,7 +44,7 @@ export const columns: ColumnDef<JobApplication>[] = [
             )
         },
         cell: ({ row }) => {
-            const status = row.getValue('status') as string
+            const status = row.getValue('Job Status') as string
             const badgeStyle = {
                 backgroundColor:
                   status === 'Pending' ? 'rgba(255, 180, 3, 0.6)' :
@@ -84,14 +68,24 @@ export const columns: ColumnDef<JobApplication>[] = [
         accessorKey: 'Application Date',
         header: () => <div className='font-primary font-bold'> Application Date </div>,
         cell: ({ row }) => {
-            return <div className='font-secondary text-md'> {row.getValue('Application Date')} </div>
+            const applicationDate = row.getValue('Application Date') as string
+            if (!applicationDate) {
+                return null
+            }
+            const formattedDate = formatDate(new Date(applicationDate), 'MM-dd-yyyy')
+            return <div className='font-secondary text-md'> { formattedDate } </div>
         } 
     },
     {
         accessorKey: 'Interview Date',
         header: () => <div className='font-primary font-bold'> Interview Date </div>,
         cell: ({ row }) => {
-            return <div className='font-secondary text-md'> {row.getValue('Interview Date')} </div>
+            const interviewDate = row.getValue('Interview Date') as string
+            if (!interviewDate) {
+                return null
+            }
+            const formattedDate = formatDate(new Date(interviewDate), 'MM-dd-yyyy')
+            return <div className='font-secondary text-md'> { formattedDate } </div>
         }
     },
     {
