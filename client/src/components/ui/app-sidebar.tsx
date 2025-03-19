@@ -90,7 +90,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] bg-white cursor-pointer ' onClick={handleClick}>
+      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] mx-2 bg-white cursor-pointer rounded-md' onClick={handleClick}>
         <div className='flex flex-row items-center text-[1.2rem] gap-2 font-primary text-gray-500 hover:text-black'>
           <LogOut style={{ width: 20, height: 20 }} strokeWidth={2} />
           <div>

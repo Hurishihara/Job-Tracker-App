@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeftCircle, ArrowRightCircle, BookOpen, Columns2, TextSearch } from "lucide-react"
+import { ArrowLeftCircle, ArrowRightCircle, BookOpen, BriefcaseBusiness, Columns2, Plus, TextSearch } from "lucide-react"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import JobApplicationSheet from "./AddJobApplicationSheet"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 
 interface DataTableProps<TData, TValue> {
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
     const [ sorting, setSorting ] = useState<SortingState>([])
     const [ columnFilters, setColumnFilters ] = useState<ColumnFiltersState>([])
     const [ columnVisibility, setColumnVisibility ] = useState<VisibilityState>({})
+    const [ isCreateSheetOpen, setIsCreateSheetOpen ] = useState(false)
     const table = useReactTable({
         data,
         columns,
@@ -75,8 +77,27 @@ export function DataTable<TData, TValue>({
                         className='font-tertiary font-medium px-10 ring-0 border-2 focus:!border-gray-600 focus-visible:ring-offset-0 focus-visible:ring-0' />
                         <TextSearch className='text-black absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600' />    
                     </div>
-                    {/* Job Application Sheet Component */}
-                    <JobApplicationSheet />
+                    <Sheet>
+                        <SheetTrigger>
+                            <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm'>
+                                <Plus className='text-black' /> Create Job Application
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side='left' className='p-3 min-w-[30rem]'>
+                            <SheetHeader>
+                                <SheetTitle>
+                                    <BriefcaseBusiness style={{ height: 35, width: 35 }} className='text-gray-600' />
+                                </SheetTitle>
+                                <SheetTitle className='text-black font-primary font-bold text-xl'>
+                                    Create a New Job Application
+                                </SheetTitle>
+                                <SheetDescription className='font-secondary font semi-bold text-md'>
+                                    Fill out the form below to add a new job application to your list.
+                                </SheetDescription>
+                            </SheetHeader>
+                            <JobApplicationSheet jobApplication={undefined} />
+                        </SheetContent>
+                    </Sheet>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant='outline' className='ml-auto text-sm font-medium text-gray-600 font-tertiary'>

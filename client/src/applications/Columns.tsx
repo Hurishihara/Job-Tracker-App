@@ -1,9 +1,14 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { api } from "@/util/axios-config"
 import { ColumnDef } from "@tanstack/react-table"
-import { formatDate } from "date-fns"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { formatDate, set } from "date-fns"
+import { ArrowUpDown, BriefcaseBusiness, Delete, MoreHorizontal, PencilLine } from "lucide-react"
+import JobApplicationSheet from "./AddJobApplicationSheet"
+import { useState } from "react"
+import { JobApplicationData, JobApplicationDataWithId } from "@/schemas/formSchema"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 export type JobApplication = {
     id: string,
@@ -13,7 +18,7 @@ export type JobApplication = {
     location: string,
     'Application Date': string,
     'Interview Date': string,
-    'Job Type': string,
+    'Job Type': 'Full-time' | 'Part-time' | 'Internship' | 'Contractual' | 'Freelance' | 'Temporary' | 'Gig' | 'Seasonal',
     'Application Method': string,
     'Job Link': string,
     notes: string,
@@ -121,21 +126,65 @@ export const columns: ColumnDef<JobApplication>[] = [
         header: () => <div> </div>,
         cell: ({ row }) =>  {
             const jobApplication = row.original
-            
+            const [ selectedJobApplication, setSelectedJobApplication ] = useState<JobApplicationDataWithId | undefined>(undefined)
+            const [ isSheetOpen, setIsSheetOpen ] = useState(false)
+            const deleteRow = async () => {
+                await api.delete(`/job-application/delete-job-application/${jobApplication.id}`)
+            }
+            const openEditSheet = async () => {
+                setSelectedJobApplication({
+                    id: jobApplication.id,
+                    companyName: jobApplication["Company Name"],
+                    jobTitle: jobApplication["Job Title"],
+                    jobStatus: jobApplication["Job Status"],
+                    location: jobApplication.location,
+                    applicationDate: new Date(jobApplication["Application Date"]),
+                    interviewDate: new Date(jobApplication["Interview Date"]),
+                    jobType: jobApplication["Job Type"],
+                    applicationMethod: jobApplication["Application Method"],
+                    jobLink: jobApplication["Job Link"],
+                    notes: jobApplication.notes
+                })
+                setIsSheetOpen(true)
+            } 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant='ghost' className='h-8 w-8 p-0'>
-                            <span className='sr-only'> Open Menu</span>
-                            <MoreHorizontal className='h-4 w-4' />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align='start'>
-                        <DropdownMenuLabel> Actions </DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => console.log('Edit', jobApplication)}> Edit </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => console.log('Delete', jobApplication)}> Delete </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <>
+                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen} >
+                    <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant='ghost' className='h-8 w-8 p-0'>
+                                <span className='sr-only'> Open Menu</span>
+                                <MoreHorizontal className='h-4 w-4' />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent  side='bottom' align='end' className='font-tertiary' >
+                            <DropdownMenuLabel className='font-semibold'> Actions </DropdownMenuLabel>
+                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={openEditSheet} >
+                                <SheetTrigger asChild>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <PencilLine className='text-black' /> Edit
+                                    </div>
+                                </SheetTrigger>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={deleteRow}> <Delete className='text-black' /> Delete </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <SheetContent side="left" className="p-3 min-w-[30rem]">
+                        <SheetHeader>
+                            <SheetTitle>
+                                <BriefcaseBusiness style={{ height: 35, width: 35 }} className="text-gray-600" />
+                            </SheetTitle>
+                            <SheetTitle className='text-black font-primary font-bold text-xl'>
+                                Update an Existing Job Application
+                            </SheetTitle>
+                            <SheetDescription className='font-secondary font-semibold text-md'>
+                                Edit the form below to update an existing job application.
+                            </SheetDescription>
+                        </SheetHeader>
+                        <JobApplicationSheet jobApplication={selectedJobApplication} />
+                    </SheetContent>
+                </Sheet>
+                </>
             )
         }
     }

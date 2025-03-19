@@ -44,7 +44,6 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
                 throw new UnauthorizedError('Please log in to create a job application', 'Unauthorized');
                 
             }
-            console.log('-------body', body)
             const res = await createJobApplication(body, user.id);
             set.status = StatusCodes.CREATED
             return res;
@@ -84,19 +83,22 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             tags: ['Job Application']
         }
     })
-    .patch('/update-job-application', async ({ user, updateJobApplication, body,  set }) => {
+    .patch('/update-job-application/:id', async ({ user, updateJobApplication, body, params, set }) => {
         try {
             if (!user) {
                 throw new UnauthorizedError('Please log in to update a job application', 'Unauthorized');
             }
-            const res = await updateJobApplication(body);
+            const jobApplicationId = params.id;
+            const res = await updateJobApplication(body, jobApplicationId);
+            set.status = StatusCodes.OK;
             return res;
         } 
         catch {
 
         }
     }, {
-        body: t.Omit(_createJobApplication, ['userId']),
+        body: t.Partial(_createJobApplication),
+        params: t.Pick(_createJobApplication, ['id']),
         auth: true,
         detail: {
             summary: 'Update a job application',
@@ -104,13 +106,17 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             tags: ['Job Application']
         }
     })
-    .delete('/delete-job-application', async ({ user, deleteJobApplication, body, set }) => {
+    .delete('/delete-job-application/:id', async ({ user, deleteJobApplication, params, set }) => {
        if (!user) {
             throw new UnauthorizedError('Please log in to delete a job application', 'Unauthorized');
        }
-       const res = await deleteJobApplication({ id: body.id })
+       console.log(user)
+       const jobId = params.id;
+       const res = await deleteJobApplication(jobId);
+       set.status = StatusCodes.OK;
+       return res;
     }, {
-        body: t.Pick(_createJobApplication, ['id']),
+        params: t.Pick(_createJobApplication, ['id']),
         auth: true,
         detail: {
             summary: 'Delete a job application',

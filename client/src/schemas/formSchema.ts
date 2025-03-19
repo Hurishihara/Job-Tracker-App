@@ -25,3 +25,4 @@ export const createJobApplicationSchema = z.object({
 })
 
 export type JobApplicationData = z.infer<typeof createJobApplicationSchema>
+export type JobApplicationDataWithId = JobApplicationData & { id: string }

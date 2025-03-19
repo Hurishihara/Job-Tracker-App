@@ -53,12 +53,12 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
             return { message: 'Error getting job applications', data: null };
         }
     })
-    .decorate('updateJobApplication', async (body: Partial<CreateJobApplicationDTO>) => {
+    .decorate('updateJobApplication', async (body: Partial<CreateJobApplicationDTO>, jobApplicationId: CreateJobApplicationDTO['id'] ) => {
         try {
-            if (!body.id) {
+            if (!jobApplicationId) {
                 throw new Error('Job application ID is required for update');
             }
-            const res = await db.update(jobApplication).set(body).where(eq(jobApplication.id, body.id as string)).returning();
+            const res = await db.update(jobApplication).set(body).where(eq(jobApplication.id, jobApplicationId)).returning();
             return { message: 'Job application updated successfully', data: res };
         }
         catch (err) {
@@ -66,7 +66,7 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
             return { message: 'Error updating job application', data: null };
         }
     })
-    .decorate('deleteJobApplication', async ({ id }: { id: CreateJobApplicationDTO['id'] }) => {
+    .decorate('deleteJobApplication', async (id: CreateJobApplicationDTO['id']) => {
         try {
             if (!id) {
                 throw new Error('Job application ID is required for deletion');
