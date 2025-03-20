@@ -32,10 +32,11 @@ const LoginPage = () => {
                 navigate('/')
                 return;
             }
-            const response = await api.post('/auth/sign-in', { email, password })
-            if (response.status === 200) {
+            const { data } = await api.post('/auth/sign-in', { email, password })
+            if (data.redirect && data.url) {
                 navigate('/')
-                return;
+                console.log('Redirecting to', data.url)
+                return
             }
         }
         catch (err) {

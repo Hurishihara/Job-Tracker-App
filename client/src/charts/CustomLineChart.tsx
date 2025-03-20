@@ -1,26 +1,12 @@
 import { CartesianGrid, Legend, Line, LineChart, XAxis } from "recharts";
-import { Card, CardContent, CardHeader } from "./components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./components/ui/chart";
+import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../components/ui/chart";
 import CustomLegendContent from "./CustomLegendContent";
+import { useEffect } from "react";
+import { api } from "../util/axios-config";
+import { useLineChartStore } from "../store/line-chart-store";
 
 
-const lineChartData = [
-    { month: "Jan", Pending: 10, "Initial Interview": 5, "Final Interview": 2, "Job Offer": 0, Rejected: 3 },
-    { month: "Feb", Pending: 10, "Initial Interview": 2, "Final Interview": 1, "Job Offer": 7, Rejected: 3 },
-    { month: "Mar", Pending: 2, "Initial Interview": 7, "Final Interview": 3, "Job Offer": 1, Rejected: 1 },
-    { month: "Apr", Pending: 5, "Initial Interview": 10,"Final Interview": 5, "Job Offer": 5, Rejected: 4 },
-    { month: "May", Pending: 1,"Initial Interview": 10, "Final Interview": 5, "Job Offer": 2, Rejected: 6 },
-    { month: "Jun", Pending: 3, "Initial Interview": 5, "Final Interview": 8, "Job Offer": 10, Rejected: 3 },
-];
-
-const chartData2 = [
-    { status: "Pending", applications: 10, fill: "#ffb403" },
-    { status: "Initial Interview", applications: 15, fill: "#a4aab6" },
-    { status: "Final Interview", applications: 15, fill: "#2cccfe" },
-    { status: "Job Offers", applications: 20, fill: "#57f000" },
-    { status: "Rejected", applications: 5, fill: "#fe3839" },
-]
-  
 const chartConfig2 = {
     totalApplications: {
         label: "Total Applications"
@@ -48,10 +34,33 @@ const chartConfig2 = {
 }
 
 const CustomLineChart = () => {
+    const { lineChartData, setLineChartData } = useLineChartStore();
+
+    const getCurrentHalfYearRange = () => {
+        const currentMonth = new Date().getMonth() + 1;
+        return currentMonth <= 6 ? { startMonth: 1, endMonth: 6 } : { startMonth: 7, endMonth: 12 };
+    }
+    
+    useEffect(() => {
+        const fetchLineChartData = async () => {
+            try {
+                const { startMonth, endMonth } = getCurrentHalfYearRange();
+                const res = await api.get('/chart-data/get-line-chart-data', {
+                    params: { startMonth, endMonth }
+                })
+                setLineChartData(res.data);
+            }
+            catch (err) {
+                console.error('Error fetching line chart data:', err);
+            }
+        }
+        fetchLineChartData();
+    }, [])
+
     return (
         <Card className='rounded-2xl shadow-xl p-[1.5rem]'>
             <CardHeader className='text-xl font-bold font-primary'>
-                Application Status Growth Over Time
+                Application Status Trends Over Time
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig2} className=' h-[250px] w-full'>
@@ -64,7 +73,7 @@ const CustomLineChart = () => {
                         <Line dataKey='Final Interview' type='natural' stroke='#2cccfe' strokeWidth={2} dot={false} />
                         <Line dataKey='Job Offer' type='natural' stroke='#57f000' strokeWidth={2} dot={false} />
                         <Line dataKey='Rejected' type='natural' stroke='#fe3839' strokeWidth={2} dot={false} />
-                        <Legend verticalAlign='top' height={36} content={<CustomLegendContent />} />
+                        <Legend  verticalAlign='top' height={60} wrapperStyle={{ paddingBottom: 10 }} content={<CustomLegendContent />} />
                     </LineChart>
                 </ChartContainer>
             </CardContent>

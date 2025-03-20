@@ -26,7 +26,7 @@ const items = [
   },
   {
     title: "Applications",
-    url: "#",
+    url: '/applications',
     icon: Briefcase,
   },
   {

@@ -1,4 +1,4 @@
-import Elysia, { t } from 'elysia';
+import Elysia, { redirect, t } from 'elysia';
 import { auth } from '../utils/auth';
 import { BetterAuthError } from 'better-auth';
 import { BadRequestError, InternalServerError, UnauthorizedError } from '../utils/error';
@@ -21,7 +21,12 @@ export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/au
             if (cookies) {
                 set.headers['set-cookie'] = cookies;
             }
-            return response;
+            return {
+                redirect: true,
+                token: response.token,
+                url: '/',
+                user: response.user
+            }
         }
         catch (err: unknown) {
             if (err instanceof BetterAuthError || err instanceof Error) {

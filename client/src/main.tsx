@@ -7,6 +7,7 @@ import RegisterPage from './RegisterPage.tsx'
 import LoginPage from './LoginPage.tsx'
 import { AuthProvider } from './auth/AuthContext.tsx'
 import Private from './layout/Private.tsx'
+import CustomTable from './applications/Page.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path='/signup' element={<RegisterPage />} />
           <Route element={<Private />}>
             <Route path='/' element={<App />} />
+            <Route path='/applications' element={<CustomTable />} />
           </Route>
         </Routes>
       </BrowserRouter>

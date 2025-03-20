@@ -1,5 +1,3 @@
-import { Legend } from "recharts";
-
 const CustomLegendContent = (props: any) => {
   const { payload } = props;
 

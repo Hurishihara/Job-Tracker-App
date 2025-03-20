@@ -149,7 +149,7 @@ export function DataTable<TData, TValue>({
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={columns.length} className='h-24 text-center font-tertiary text-md'>
+                                    <TableCell colSpan={columns.length} className='h-24 text-center font-tertiary text-lg'>
                                         No results.
                                     </TableCell>
                                 </TableRow>
