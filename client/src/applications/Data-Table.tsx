@@ -32,16 +32,21 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    pageSize?: number
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    pageSize = 10,
 }: DataTableProps<TData, TValue>) {
     const [ sorting, setSorting ] = useState<SortingState>([])
     const [ columnFilters, setColumnFilters ] = useState<ColumnFiltersState>([])
     const [ columnVisibility, setColumnVisibility ] = useState<VisibilityState>({})
-    const [ isCreateSheetOpen, setIsCreateSheetOpen ] = useState(false)
+    const [pagination, setPagination] = useState({
+        pageIndex: 0, // Start at first page
+        pageSize, // Use prop value
+    });
     const table = useReactTable({
         data,
         columns,
@@ -56,7 +61,9 @@ export function DataTable<TData, TValue>({
             sorting,
             columnFilters,
             columnVisibility,
-        }
+            pagination,
+        },
+        onPaginationChange: setPagination,
         
     })
     const totalRows = data.length
@@ -66,7 +73,7 @@ export function DataTable<TData, TValue>({
     const endRow = Math.min((currentPage + 1) * currentPageSize, totalRows)
 
     return (
-        <Card className='rounded-2xl shadow-xl'>
+        <Card className='rounded-2xl shadow-xl sm:min-w-[20rem] md:w-[30rem] lg:w-[46rem] xl:w-[62rem] 2xl:w-[82vw] 3xl:w-[84vw]'>
             <CardContent>
                 <div className='flex items-center py-4 gap-2'>
                     <div className='relative max-w-sm'>

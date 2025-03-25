@@ -1,4 +1,3 @@
-
 import { LineChartData } from "@/types/chart-types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";

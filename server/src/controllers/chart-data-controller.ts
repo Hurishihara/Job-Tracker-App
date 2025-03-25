@@ -7,12 +7,13 @@ import { StatusCodes } from "http-status-codes";
 export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix: '/chart-data' })
     .use(betterAuthMiddleware)
     .use(ChartDataService)
-    .get('/get-pie-chart-data', async ({ user, getPieChartData, set }) => {
+    .get('/get-pie-chart-data', async ({ user, getPieChartData, set, query }) => {
         try {
             if (!user) {
                 throw new UnauthorizedError('Please log in to get chart data', 'Unauthorized');
             }
-            const res = await getPieChartData(user.id);
+            const { startMonth, endMonth } = query
+            const res = await getPieChartData(user.id, startMonth, endMonth);
             set.status = StatusCodes.OK;
             return res;
         }
@@ -21,6 +22,10 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         }
     }, {
         auth: true,
+        query: t.Object({
+            startMonth: t.Number(),
+            endMonth: t.Number()
+        }),
         detail: {
             summary: 'Get pie chart data',
             description: 'Get pie chart data for a user',
@@ -33,7 +38,6 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
                 throw new UnauthorizedError('Please log in to get chart data', 'Unauthorized');
             }
             const { startMonth, endMonth } = query
-            console.log('startMonth:', startMonth, 'endMonth:', endMonth);
             set.status = StatusCodes.OK;
             const res = await getLineChartData(user.id, startMonth, endMonth);
             return res;
@@ -50,6 +54,56 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         detail: {
             summary: 'Get line chart data',
             description: 'Get line chart data for a user',
+            tags: ['Chart Data']
+        }
+    })
+    .get('/get-bar-chart-data', async ({ user, getBarChartData, set, query }) => {
+        try {
+            if (!user) {
+                throw new UnauthorizedError('Please log in to get chart data', 'Unauthorized');
+            }
+            const { startMonth, endMonth } = query
+            const res = await getBarChartData(user.id, startMonth, endMonth);
+            set.status = StatusCodes.OK;
+            return res;
+        }
+        catch (err) {
+            console.error('Error in ChartDataController:', err);
+        }
+    }, {
+        auth: true,
+        query: t.Object({
+            startMonth: t.Number(),
+            endMonth: t.Number()
+        }),
+        detail: {
+            summary: 'Get bar chart data',
+            description: 'Get bar chart data for a user',
+            tags: ['Chart Data']
+        }
+    })
+    .get('/get-area-chart-data', async ({ user, getAreaChartData, set, query }) => {
+        try {
+            if (!user) {
+                throw new UnauthorizedError('Please log in to get chart data', 'Unauthorized');
+            }
+            const { startMonth, endMonth } = query
+            const res = await getAreaChartData(user.id, startMonth, endMonth);
+            set.status = StatusCodes.OK;
+            return res;
+        }
+        catch (err) {
+            console.error('Error in ChartDataController:', err);
+        }
+    }, {
+        auth: true,
+        query: t.Object({
+            startMonth: t.Number(),
+            endMonth: t.Number()
+        }),
+        detail: {
+            summary: 'Get area chart data',
+            description: 'Get area chart data for a user',
             tags: ['Chart Data']
         }
     })

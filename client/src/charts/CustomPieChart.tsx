@@ -1,5 +1,5 @@
 import { useEffect, useMemo  } from 'react'
-import { Card, CardHeader } from '../components/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '../components/ui/chart'
 import { Pie, PieChart, Label } from 'recharts'
 import { api } from '../util/axios-config'
@@ -44,13 +44,45 @@ const CustomPieChart = () => {
         return pieChartData.reduce((acc, curr) => acc + curr.applications, 0)
     }, [pieChartData])
 
+    const getCurrentHalfYearRange = () => {
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+        return currentMonth <= 6 ? { startMonth: 1, endMonth: 6, rangeText: `January - June ${currentYear}` } : { startMonth: 7, endMonth: 12, rangeText: `July - December ${currentYear}` };
+    }
+
+    const { startMonth, endMonth, rangeText } = getCurrentHalfYearRange();
+
     const chartDataWithPercentage = useMemo(() => {
         if (pieChartData.length === 0) {
             return [
                 {
-                    status: 'No data available',
+                    status: 'Pending',
                     applications: 1,
-                    fill: '#d3d3d3',
+                    fill: '#ffb403',
+                    percentage: '0.00'
+                },
+                {
+                    status: 'Initial Interview',
+                    applications: 1,
+                    fill: '#a4aab6',
+                    percentage: '0.00'
+                },
+                {
+                    status: 'Final Interview',
+                    applications: 1,
+                    fill: '#2cccfe',
+                    percentage: '0.00'
+                },
+                {
+                    status: 'Job Offer',
+                    applications: 1,
+                    fill: '#57f000',
+                    percentage: '0.00'
+                },
+                {
+                    status: 'Rejected',
+                    applications: 1,
+                    fill: '#fe3839',
                     percentage: '0.00'
                 }
             ]
@@ -65,7 +97,9 @@ const CustomPieChart = () => {
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const res = await api.get('/chart-data/get-pie-chart-data')
+                const res = await api.get('/chart-data/get-pie-chart-data', {
+                    params: { startMonth, endMonth }
+                })
                 setPieChartData(res.data.data)
             }
             catch (err) {
@@ -76,9 +110,10 @@ const CustomPieChart = () => {
     }, [])
 
     return (
-        <Card className='rounded-2xl shadow-xl' >
-            <CardHeader className='text-xl font-bold font-primary'>
-                Application Status Distribution
+        <Card className='rounded-2xl shadow-xl w-full' >
+            <CardHeader className='text-xl font-primary'>
+                <CardTitle> Application Distribution </CardTitle>
+                <CardDescription> { rangeText } </CardDescription>
             </CardHeader>
             <div className='grid grid-cols-12 items-center justify-items-center gap-0 w-full p-[1.5rem]'>
                 <div className='col-span-5'>
@@ -93,9 +128,9 @@ const CustomPieChart = () => {
                             }} />} />
                             <Pie
                                 data={chartDataWithPercentage}
-                                dataKey='applications' // ✅ Fixed: Corrected key
+                                dataKey='applications'
                                 nameKey='status'
-                                innerRadius={70}
+                                innerRadius={60}
                                 outerRadius={100}
                                 strokeWidth={5}
                             >

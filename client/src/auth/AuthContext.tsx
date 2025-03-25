@@ -13,14 +13,16 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [ isAuthenticated , setIsAuthenticated ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(true);
-    const [ data, setData ] = useState<any>(null);
+    const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
     useEffect(() => {
+
         const checkAuth = async () => {
             try {
                 const { data: session } = await authClient.getSession();
                 if (session?.user) {
                     console.log('User is authenticated', session.user);
+                    await delay(1000)
                     setIsAuthenticated(true);
                 }
                 else {

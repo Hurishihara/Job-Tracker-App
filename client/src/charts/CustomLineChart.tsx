@@ -1,5 +1,5 @@
 import { CartesianGrid, Legend, Line, LineChart, XAxis } from "recharts";
-import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../components/ui/chart";
 import CustomLegendContent from "./CustomLegendContent";
 import { useEffect } from "react";
@@ -8,28 +8,25 @@ import { useLineChartStore } from "../store/line-chart-store";
 
 
 const chartConfig2 = {
-    totalApplications: {
-        label: "Total Applications"
-    },
     Pending: {
         label: "Pending",
-        color: "#ffb403"
+        color: '#F59E0B' // amber
     },
     InitialInterview: {
         label: "Initial Interview",
-        color: "#a4aab6"
+        color: '#10B981' // emerald green
     },
     FinalInterview: {
         label: "Final Interview",
-        color: "#2cccfe"
+        color: '#2563EB' // muted royal blue
     },
     JobOffers: {
         label: "Job Offers",
-        color: "#57f000"
+        color: '#FACC15' // gold
     },
     Rejected: {
         label: "Rejected",
-        color: "#fe3839"
+        color: '#EF4444' // muted red
     },
 }
 
@@ -58,22 +55,23 @@ const CustomLineChart = () => {
     }, [])
 
     return (
-        <Card className='rounded-2xl shadow-xl p-[1.5rem]'>
-            <CardHeader className='text-xl font-bold font-primary'>
-                Application Status Trends Over Time
+        <Card className='rounded-2xl shadow-xl'>
+            <CardHeader className='text-xl font-primary'>
+                <CardTitle> Application Trends Over Time </CardTitle>
+                <CardDescription> January - June 2025 </CardDescription>
             </CardHeader>
             <CardContent>
-                <ChartContainer config={chartConfig2} className=' h-[250px] w-full'>
-                    <LineChart accessibilityLayer data={lineChartData} margin={{ left: 12, right: 12 }}>
+                <ChartContainer config={chartConfig2} className='h-[250px] w-full'>
+                    <LineChart accessibilityLayer data={lineChartData} margin={{ left: 12, right: 12, bottom: 12 }} >
                         <CartesianGrid vertical={false} />
                         <XAxis className='font-secondary font-semibold' dataKey='month' tickLine={false} axisLine={false} tickMargin={8} tickFormatter={(value) => value.slice(0, 3)} />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                        <Line dataKey='Pending' type='natural' stroke='#ffb403' strokeWidth={2} dot={false} />
-                        <Line dataKey='Initial Interview' type='natural' stroke='#a4aab6' strokeWidth={2} dot={false} />
-                        <Line dataKey='Final Interview' type='natural' stroke='#2cccfe' strokeWidth={2} dot={false} />
-                        <Line dataKey='Job Offer' type='natural' stroke='#57f000' strokeWidth={2} dot={false} />
-                        <Line dataKey='Rejected' type='natural' stroke='#fe3839' strokeWidth={2} dot={false} />
-                        <Legend  verticalAlign='top' height={60} wrapperStyle={{ paddingBottom: 10 }} content={<CustomLegendContent />} />
+                        <Line dataKey='Pending' type='natural' stroke='#F59E0B' strokeWidth={2} dot={false} />
+                        <Line dataKey='Initial Interview' type='natural' stroke='#10B981' strokeWidth={2} dot={false} />
+                        <Line dataKey='Final Interview' type='natural' stroke='#2563EB' strokeWidth={2} dot={false} />
+                        <Line dataKey='Job Offer' type='natural' stroke='#FACC15' strokeWidth={2} dot={false} />
+                        <Line dataKey='Rejected' type='natural' stroke='#EF4444'  strokeWidth={2} dot={false} />
+                        <Legend  verticalAlign='top' height={60} wrapperStyle={{ borderBottom: 20}} content={<CustomLegendContent />} />
                     </LineChart>
                 </ChartContainer>
             </CardContent>

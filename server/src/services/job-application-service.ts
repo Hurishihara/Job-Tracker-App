@@ -1,9 +1,8 @@
 import Elysia from 'elysia';
 import { CreateJobApplicationDTO } from '../types/job-application-types';
 import { db } from '../db/db';
-import { jobApplication } from '../db/schema';
-import { eq } from 'drizzle-orm';
-import { PgUUID } from 'drizzle-orm/pg-core';
+import { jobApplication, userJobStatusUpdate } from '../db/schema';
+import { and, eq } from 'drizzle-orm';
 import { User } from 'better-auth/types';
 
 export const JobApplicationService = new Elysia({ name: 'Service.JobApplication' })
@@ -22,6 +21,13 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
                 notes: body.notes,
                 userId: userId
             }).returning()
+
+            await db.insert(userJobStatusUpdate).values({
+                jobApplicationId: res[0].id,
+                jobStatus: body.jobStatus,
+                updatedAt: new Date()
+            })
+
             return { message: 'Job application created successfully', id: res[0] };
         }
         catch (err) {
@@ -59,6 +65,28 @@ export const JobApplicationService = new Elysia({ name: 'Service.JobApplication'
                 throw new Error('Job application ID is required for update');
             }
             const res = await db.update(jobApplication).set(body).where(eq(jobApplication.id, jobApplicationId)).returning();
+            console.log('res:', res);
+
+            if (body.jobStatus) {
+                const res = await db.query.userJobStatusUpdate.findFirst({
+                    where: and(
+                        eq(userJobStatusUpdate.jobApplicationId, jobApplicationId),
+                        eq(userJobStatusUpdate.jobStatus, body.jobStatus)
+                    ),
+                    columns: {
+                        jobStatus: true
+                    }
+                })
+                if (res?.jobStatus === body.jobStatus) {
+                    return;
+                }
+                await db.insert(userJobStatusUpdate).values({
+                    jobApplicationId: jobApplicationId,
+                    jobStatus: body.jobStatus,
+                    updatedAt: new Date()
+                })
+            }
+
             return { message: 'Job application updated successfully', data: res };
         }
         catch (err) {

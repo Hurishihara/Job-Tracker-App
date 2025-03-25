@@ -3,7 +3,7 @@ import { columns, JobApplication } from "./Columns"
 import { DataTable } from "./Data-Table"
 import { api } from "@/util/axios-config"
 
-const CustomTable = () => {
+const CustomTable = ({ pageSize }: any) => {
     const [data, setData] = useState<JobApplication[]>([])
     useEffect(() => {
         const fetchData = async () => {
@@ -14,9 +14,7 @@ const CustomTable = () => {
         fetchData()
     }, [])
     return (
-        <div className='container mx-auto py-5'>
-            <DataTable columns={columns} data={data} />
-        </div>
+        <DataTable columns={columns} data={data} pageSize={pageSize} />    
     )
 }
 

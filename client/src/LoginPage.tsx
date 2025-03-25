@@ -29,12 +29,12 @@ const LoginPage = () => {
         try {
             const session = await authClient.getSession();
             if(session?.data?.user) {
-                navigate('/')
+                navigate('/dashboard')
                 return;
             }
             const { data } = await api.post('/auth/sign-in', { email, password })
             if (data.redirect && data.url) {
-                navigate('/')
+                navigate('/dashboard')
                 console.log('Redirecting to', data.url)
                 return
             }
