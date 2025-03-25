@@ -1,7 +1,7 @@
-import CustomAreaChart from './charts/CustomAreaChart';
-import CustomBarChart from './charts/CustomBarChart';
-import CustomLineChart from './charts/CustomLineChart';
-import CustomPieChart from './charts/CustomPieChart'
+import CustomAreaChart from '../charts/CustomAreaChart';
+import CustomBarChart from '../charts/CustomBarChart';
+import CustomLineChart from '../charts/CustomLineChart';
+import CustomPieChart from '../charts/CustomPieChart'
 
 const Analytics = () => {
     return (

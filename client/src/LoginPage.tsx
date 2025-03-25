@@ -11,7 +11,7 @@ import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
 import { authClient } from './util/auth-client'
-import { redirect, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { api } from './util/axios-config'
 
 
