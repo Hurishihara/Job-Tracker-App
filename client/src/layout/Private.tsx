@@ -35,7 +35,7 @@ const Private = () => {
                 <Outlet />    
             </Layout>
         </div>
-    ) : <Navigate to='/login' />;
+    ) : <Navigate to='/' />;
 };
 
 export default Private;

@@ -58,7 +58,7 @@ const CustomBarChart = () => {
 
   return (
     <Card className='rounded-2xl shadow-xl'>
-      <CardHeader className='text-xl font-primary'>
+      <CardHeader className='text-2xl font-primary'>
         <CardTitle>Monthly Total Applications</CardTitle>
         <CardDescription>January - June 2025</CardDescription>
       </CardHeader>
@@ -68,7 +68,7 @@ const CustomBarChart = () => {
             accessibilityLayer
             data={barChartData}
             margin={{
-              top: 12,
+              top: 24,
               left: 12,
               right: 12,
               bottom: 12

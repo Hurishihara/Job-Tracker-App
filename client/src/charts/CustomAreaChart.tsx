@@ -65,7 +65,7 @@ const CustomAreaChart = () => {
 
   return (
     <Card className='rounded-2xl shadow-xl'>
-      <CardHeader className='text-xl font-primary'>
+      <CardHeader className='text-2xl font-primary'>
         <CardTitle> Average Application Progression Time </CardTitle>
         <CardDescription>
           { rangeText } | From initial application to final interview.

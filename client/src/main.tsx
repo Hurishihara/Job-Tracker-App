@@ -9,14 +9,16 @@ import Private from './layout/Private.tsx'
 import Analytics from './pages/Analytics.tsx'
 import Applications from './pages/Applications.tsx'
 import Dashboard from './pages/Dashboard.tsx'
+import LandingPage from './LandingPage.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={<LandingPage />} />
           <Route path='/login' element={<LoginPage />} />
-          <Route path='/signup' element={<RegisterPage />} />
+          <Route path='/sign-up' element={<RegisterPage />} />
           <Route element={<Private />}>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/applications' element={<Applications />} />

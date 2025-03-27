@@ -50,8 +50,8 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar collapsible='offcanvas' variant='inset'  >
-      <SidebarContent className='bg-white'>
+    <Sidebar collapsible='offcanvas' variant='floating'  >
+      <SidebarContent className='bg-gray-white'>
         <SidebarGroup>
           <SidebarGroupLabel className='mt-[1.5rem] mb-[3rem] p-3 text-2xl text-black font-bold'>
             <div className='flex flex-row gap-[0.5rem] items-center'>

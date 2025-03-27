@@ -56,7 +56,7 @@ const CustomLineChart = () => {
 
     return (
         <Card className='rounded-2xl shadow-xl'>
-            <CardHeader className='text-xl font-primary'>
+            <CardHeader className='text-2xl font-primary'>
                 <CardTitle> Application Trends Over Time </CardTitle>
                 <CardDescription> January - June 2025 </CardDescription>
             </CardHeader>

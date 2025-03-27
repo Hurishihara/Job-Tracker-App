@@ -11,16 +11,31 @@ import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
 import { authClient } from './util/auth-client'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const RegisterPage = () => {
+
+  const [ searchParams ] = useSearchParams()
+  const emailParam = searchParams.get('email') || ''
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-        email: '',
+        email: emailParam || '',
         username: '',
         password: '',
     }
   })
+
+  useEffect(() => {
+    if (emailParam) {
+        form.setValue('email', emailParam)
+
+        navigate('/sign-up', { replace: true })
+    }
+  }, [emailParam, form, navigate])
 
   const handleOnSubmit = async ({ username, email, password }: z.infer<typeof registerSchema>) => {
     console.log('Forms', username, email, password)

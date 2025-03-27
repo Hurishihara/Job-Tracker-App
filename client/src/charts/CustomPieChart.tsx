@@ -111,7 +111,7 @@ const CustomPieChart = () => {
 
     return (
         <Card className='rounded-2xl shadow-xl w-full' >
-            <CardHeader className='text-xl font-primary'>
+            <CardHeader className='text-2xl font-primary'>
                 <CardTitle> Application Distribution </CardTitle>
                 <CardDescription> { rangeText } </CardDescription>
             </CardHeader>

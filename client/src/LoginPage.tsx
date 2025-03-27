@@ -13,6 +13,7 @@ import { Button } from './components/ui/button'
 import { authClient } from './util/auth-client'
 import { useNavigate } from 'react-router-dom'
 import { api } from './util/axios-config'
+import { useAuth } from './auth/AuthContext'
 
 
 const LoginPage = () => {
@@ -27,8 +28,8 @@ const LoginPage = () => {
 
     const handleOnSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
         try {
-            const session = await authClient.getSession();
-            if(session?.data?.user) {
+             const { isAuthenticated, loading } = useAuth();
+            if(isAuthenticated && !loading) {
                 navigate('/dashboard')
                 return;
             }
