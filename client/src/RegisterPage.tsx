@@ -73,7 +73,7 @@ const RegisterPage = () => {
                         <div className='flex flex-col justify-between gap=[5rem]'>
                             <div className='flex flex-row items-center gap-[1rem] p-[2rem]'>
                                 <img src={image1} className='w-10 h-10 rounded-[0.4rem]' />
-                                <CardTitle className='text-[1.8rem]'> SyncTrackr </CardTitle>
+                                <CardTitle className='text-[1.8rem]'> traqify </CardTitle>
                             </div>
                             <div className='flex flex-col p-[1.5rem] gap-3'>
                                 <CardTitle className='text-[2.5rem] font-semibold leading-[3rem]'> Simplify your job applications  <br />  with organized tracking </CardTitle>
