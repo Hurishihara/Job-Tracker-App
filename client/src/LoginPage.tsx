@@ -1,7 +1,5 @@
 import { Card, CardDescription, CardTitle } from './components/ui/card'
 import './index.css'
-import image2 from './assets/logo2.png'
-import image1 from './assets/logo1.png'
 import logo from './assets/traqifylogo.png'
 import whitelogo from './assets/logo-white.png'
 import { useForm } from 'react-hook-form'
@@ -12,7 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from './components/
 import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
-import { authClient } from './util/auth-client'
 import { useNavigate } from 'react-router-dom'
 import { api } from './util/axios-config'
 import { useAuth } from './auth/AuthContext'
@@ -51,7 +48,7 @@ const LoginPage = () => {
 
   return (
     <>
-        <div className='flex flex-row justify-start items-center gap-1 py-5 mb-35 mx-25'>
+        <div className='flex flex-row justify-start items-center gap-1 py-5 mb-30 mx-25'>
             <img src={whitelogo} alt='logo' className='h-9 w-9 rounded-lg cursor-pointer' onClick={() => navigate('/')} />
             <h1 className='text-3xl font-bold font-primary cursor-pointer' onClick={() => navigate('/')}>traqify</h1>
         </div>
@@ -116,22 +113,22 @@ const LoginPage = () => {
             </Card>
         </div>
         <footer className='bg-black text-white py-5'>
-                <div className='grid grid-cols-12 gap-10 sm:px-10 md:px-10 lg:px-20 xl:px-20 px-5'>
-                    {/* Brand & Tagline */}
-                    <div className='col-span-3'>
-                        <h2 className='text-3xl font-bold font-primary'>traqify</h2>
-                        <p className='text-sm font-secondary text-gray-400 mt-2'>Your all-in-one job application tracker. Stay organized, stay ahead.</p>
-                    </div>
-                    {/* Legal */}
-                    <div  className='col-span-3'>
-                        <h3 className='text-lg font-primary font-semibold mb-3'>Legal</h3>
-                        <ul className='text-sm space-y-2 text-gray-400 font-secondary'>
-                            <li><a href='/privacy' className='hover:text-white'>Privacy Policy</a></li>
-                            <li><a href='/terms' className='hover:text-white'>Terms of Service</a></li>
-                            <li><a href='/cookie' className='hover:text-white'> Cookie Policy </a> </li>
-                        </ul>
-                    </div>
-                 </div>
+            <div className='grid grid-cols-12 gap-10 sm:px-10 md:px-10 lg:px-20 xl:px-20 px-5'>
+                {/* Brand & Tagline */}
+                <div className='col-span-3'>
+                    <h2 className='text-3xl font-bold font-primary'>traqify</h2>
+                    <p className='text-sm font-secondary text-gray-400 mt-2'>Your all-in-one job application tracker. Stay organized, stay ahead.</p>
+                </div>
+                {/* Legal */}
+                <div  className='col-span-3'>
+                    <h3 className='text-lg font-primary font-semibold mb-3'>Legal</h3>
+                    <ul className='text-sm space-y-2 text-gray-400 font-secondary'>
+                        <li><a href='/privacy' className='hover:text-white'>Privacy Policy</a></li>
+                        <li><a href='/terms' className='hover:text-white'>Terms of Service</a></li>
+                        <li><a href='/cookie' className='hover:text-white'> Cookie Policy </a> </li>
+                    </ul>
+                </div>
+            </div>
             {/* Copyright */}
             <div className='text-center font-secondary text-gray-400 text-sm pt-5'>
                 © {new Date().getFullYear()} Traqify. All rights reserved.
