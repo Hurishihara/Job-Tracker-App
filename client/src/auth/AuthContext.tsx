@@ -1,5 +1,4 @@
 import { authClient } from "@/util/auth-client";
-import { set } from "date-fns";
 import { createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
@@ -22,7 +21,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
                 const { data: session } = await authClient.getSession();
                 if (session?.user) {
                     console.log('User is authenticated', session.user);
-                    await delay(1000)
+                    await delay(1000); // Simulate a delay for loading state
                     setIsAuthenticated(true);
                 }
                 else {

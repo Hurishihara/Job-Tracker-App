@@ -10,9 +10,11 @@ import Analytics from './pages/Analytics.tsx'
 import Applications from './pages/Applications.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import LandingPage from './LandingPage.tsx'
+import { Toaster } from 'sonner'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Toaster position='top-right' richColors  />
     <AuthProvider>
       <BrowserRouter>
         <Routes>

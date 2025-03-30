@@ -11,9 +11,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarImage } from "./avatar"
-import image1 from '../../assets/logo1.png'
+import whitelogo from "@/assets/sidebarlogo.png"
 import { authClient } from "@/util/auth-client"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/auth/AuthContext"
+import { toast } from "sonner"
 
 
 // Menu items.
@@ -37,29 +39,31 @@ const items = [
 
 export function AppSidebar() {
 
-  const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth()
 
   const handleClick = async () => {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          navigate('/login')
+          toast.success('Logged out successfully', {
+            className: 'font-tertiary text-lg font-bold',
+            duration: 1000,
+          })
+          setIsAuthenticated(false)
         }
       }
     })
   }
 
   return (
-    <Sidebar collapsible='offcanvas' variant='floating'  >
-      <SidebarContent className='bg-gray-white'>
-        <SidebarGroup>
+    <Sidebar collapsible='offcanvas' variant='floating'>
+      <SidebarContent className='bg-white rounded-2xl'>
+        <SidebarGroup className='bg-white'>
           <SidebarGroupLabel className='mt-[1.5rem] mb-[3rem] p-3 text-2xl text-black font-bold'>
             <div className='flex flex-row gap-[0.5rem] items-center'>
-                <Avatar>
-                    <AvatarImage src={image1} className='' />
-                </Avatar>
-                <div className='font-primary'>
-                    Sync
+              <img src={whitelogo} alt='logo' className='h-9 w-9 rounded-lg' />
+                <div className='font-primary font-bold text-2xl'>
+                    traqify
                 </div>
             </div>
           </SidebarGroupLabel>
@@ -79,7 +83,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] mx-2 bg-white cursor-pointer rounded-md' onClick={handleClick}>
+      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] mx-2 cursor-pointer rounded-md' onClick={handleClick}>
         <div className='flex flex-row items-center text-[1.2rem] gap-2 font-primary text-gray-500 font-semibold hover:text-black'>
           <LogOut style={{ width: 20, height: 20 }} strokeWidth={2} className='text-black' />
           <div>

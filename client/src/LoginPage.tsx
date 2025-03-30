@@ -14,10 +14,13 @@ import { useNavigate } from 'react-router-dom'
 import { api } from './util/axios-config'
 import { useAuth } from './auth/AuthContext'
 import { BrainCircuit } from 'lucide-react'
+import axios from 'axios'
+import { toast } from 'sonner'
 
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const { setIsAuthenticated } = useAuth();
     const form = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -28,21 +31,32 @@ const LoginPage = () => {
 
     const handleOnSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
         try {
-             const { isAuthenticated, loading } = useAuth();
-            if(isAuthenticated && !loading) {
-                navigate('/dashboard')
-                return;
-            }
             const { data } = await api.post('/auth/sign-in', { email, password })
+            toast.success('Login successful', {
+                description: 'Welcome back! Redirecting to your dashboard...',
+                className: 'font-tertiary text-lg font-bold',
+                descriptionClassName: 'font-tertiary text-md font-semibold',
+            })
+            setIsAuthenticated(true)
             if (data.redirect && data.url) {
-                navigate('/dashboard')
-                console.log('Redirecting to', data.url)
+                setTimeout(() => navigate('/dashboard'), 1500)
                 return
             }
         }
-        catch (err) {
-            console.error('Catch err', err)
-            console.log('Error signing in')
+        catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+               toast.error(err.response?.data.name, {
+                    description: err.response?.data.message,
+                    className: 'font-tertiary text-lg font-bold',
+                    descriptionClassName: 'font-tertiary text-md font-semibold',
+               })
+            }
+            else {
+                console.error('An unexpected error occurred:', err)
+                toast.error('An unexpected error occurred. Please try again later.', {
+                    duration: 3000,
+                })
+            }
         }
     }
 
@@ -102,7 +116,9 @@ const LoginPage = () => {
                                             </FormItem>
                                         )}
                                         />
-                                        <Button type='submit' className='font-tertiary rounded-lg p-6 cursor-pointer'>Sign in</Button>
+                                        <Button type='submit' className='font-tertiary rounded-lg p-6 cursor-pointer'>
+                                            Sign in
+                                        </Button>
                                         </div>
                                     </form>
                                 </div>

@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { BriefcaseBusiness, CalendarIcon, Pencil, PencilLine, Plus, } from "lucide-react"
+import { CalendarIcon, Pencil, PencilLine, Plus, } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { SheetFooter } from "@/components/ui/sheet"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
-import { format, set } from "date-fns"
+import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Textarea } from "@/components/ui/textarea"
 import { createJobApplicationSchema, JobApplicationData, JobApplicationDataWithId } from "@/schemas/formSchema"
@@ -15,7 +15,8 @@ import { Form, FormField, FormMessage } from "@/components/ui/form"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { api } from "@/util/axios-config"
-import { JobApplication } from "./Columns"
+import { toast } from "sonner"
+import axios from "axios"
 
 const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicationDataWithId }) => {
 
@@ -38,16 +39,21 @@ const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicat
 
     const handleJobApplicationSubmit = async (value: JobApplicationData) => {
         const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
-        console.log(value)
         try {
             await delay(2000);
             if (jobApplication) {
-                const res = await api.patch(`/job-application/update-job-application/${jobApplication.id}`, value)
-                console.log('Updated Successfully', res)
+                await api.patch(`/job-application/update-job-application/${jobApplication.id}`, value)
+                toast.success('Job Application updated successfully!', {
+                    className: 'font-tertiary font-semibold',
+                    icon: <Pencil />
+                })
                 return;
             }
-            const res = await api.post('/job-application/create-job-application', value)
-            console.log('Created Successfully', res)
+            await api.post('/job-application/create-job-application', value)
+            toast.success('Job Application created successfully!', {
+                className: 'font-tertiary font-semibold',
+                icon: <Plus />
+            })
             return;
         }
         catch (err) {
@@ -55,7 +61,18 @@ const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicat
                 await delay(2000)
                 console.log(err.errors)
             }
-            
+            else if (axios.isAxiosError(err)) {
+                toast.error(err.response?.data.name, {
+                    description: err.response?.data.message,
+                    className: 'font-tertiary font-semibold',
+                    descriptionClassName: 'font-tertiary font-medium'
+                })
+            }
+            else {
+                toast.error('Something went wrong. Please try again later', {
+                    className: 'font-tertiary font-semibold',
+                })
+            }
         }
     }
 

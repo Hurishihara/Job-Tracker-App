@@ -10,13 +10,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from './components/
 import { Input } from './components/ui/input'
 import { cn } from './lib/utils'
 import { Button } from './components/ui/button'
-import { authClient } from './util/auth-client'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react'
-import { BrainCircuit, Footprints } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import {  Footprints } from 'lucide-react'
+import { toast } from 'sonner'
+import { api } from './util/axios-config'
+import axios from 'axios'
 
 const RegisterPage = () => {
 
+  const [loading, setLoading] = useState(false);
   const [ searchParams ] = useSearchParams()
   const emailParam = searchParams.get('email') || ''
   const navigate = useNavigate();
@@ -39,29 +42,25 @@ const RegisterPage = () => {
   }, [emailParam, form, navigate])
 
   const handleOnSubmit = async ({ username, email, password }: z.infer<typeof registerSchema>) => {
-    console.log('Forms', username, email, password)
+    setLoading(true)
+    const toastId = toast.loading('Creating your account...')
     try {
-        const { data, error } = await authClient.signUp.email({
-            email,
-            password,
-            name: username,
-            image: '',
-        }, {
-            onRequest: (ctx) => {
-                console.log('Request', ctx)
-            },
-            onSuccess: (ctx) => {
-                console.log('Success', ctx)
-            },
-            onError: (ctx) => {
-                console.log('Error', ctx)
-                console.log('Error creating account')
-            }
-        });
+        await api.post('/auth/sign-up', { username, email, password })
+        toast.success("Account created successfully!", { id: toastId });
+        setLoading(false)
     }
     catch (err) {
-        console.error('Catch err', err)
-        console.log('Error creating account')
+       if (axios.isAxiosError(err)) {
+            setTimeout(() => {
+                toast.error(err.response?.data.name, {
+                    description: err.response?.data.message,
+                    className: 'font-tertiary text-lg font-bold',
+                    descriptionClassName: 'font-tertiary text-md font-semibold',
+                    id: toastId,
+                })
+                setLoading(false)
+            }, 3000)
+       }
     }
   }
 
@@ -94,7 +93,7 @@ const RegisterPage = () => {
                                         <FormField control={form.control} name='username' render={({ field }) => (
                                                 <FormItem className='relative'>
                                                     <FormControl>
-                                                        <Input className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., LemonBanana042' type='text'  {...field} />
+                                                        <Input disabled={loading} className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., LemonBanana042' type='text'  {...field} />
                                                     </FormControl>
                                                     <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Username</FormLabel>
                                                 </FormItem>
@@ -103,7 +102,7 @@ const RegisterPage = () => {
                                         <FormField control={form.control} name='email' render={({ field }) => (
                                                 <FormItem className='relative'>
                                                     <FormControl>
-                                                        <Input className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., test@gmail.com' type='email'  {...field} />
+                                                        <Input disabled={loading} className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., test@gmail.com' type='email'  {...field} />
                                                     </FormControl>
                                                     <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Email</FormLabel>
                                                 </FormItem>
@@ -112,14 +111,14 @@ const RegisterPage = () => {
                                         <FormField control={form.control} name='password' render={({ field }) => (
                                             <FormItem className='relative'>
                                                 <FormControl>
-                                                    <Input className='p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='' type='password'  {...field} />
+                                                    <Input disabled={loading} className='p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='' type='password'  {...field} />
                                                 </FormControl>
                                                 <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Password</FormLabel>
 
                                             </FormItem>
                                         )}
                                         />
-                                        <Button type='submit' className='font-tertiary rounded-lg p-6 cursor-pointer'>Create Account</Button>
+                                        <Button type='submit' disabled={loading} className='font-tertiary rounded-lg p-6 cursor-pointer'>Create Account</Button>
                                         </div>
                                     </form>
                                 </div>

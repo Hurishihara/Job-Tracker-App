@@ -7,15 +7,13 @@ import { Button } from './components/ui/button'
 import { Card, CardDescription, CardHeader, CardTitle } from './components/ui/card'
 import { Separator } from './components/ui/separator'
 import { Input } from './components/ui/input'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from './auth/AuthContext'
 
 const LandingPage = () => {
 
     const [ email, setEmail] = useState<string>('')
     const navigate = useNavigate()
-    const { isAuthenticated, loading } = useAuth();
 
     const handleStartNow = () => {
         if (email) {
@@ -31,20 +29,14 @@ const LandingPage = () => {
         navigate('/sign-up')
     }
 
-    useEffect(() => {
-        if (isAuthenticated && !loading) {
-            navigate('/dashboard')
-        }
-    }, [isAuthenticated, loading, navigate])
-
     return (
        <div className='bg-gray-50 h-screen'>
             <div className='flex flex-row justify-start items-center gap-1 py-5 mb-20 sm:mx-3 md:mx-3: lg:mx-10 xl:mx-20 2xl:mx-25'>
                 <img src={image1} alt='logo' className='h-9 w-9 rounded-lg' />
                 <h1 className='text-3xl font-bold font-primary'>traqify</h1>
                 <div className='flex flex-row items-center gap-5 ml-auto'>
-                    <Button className='rounded-md font-semibold font-tertiary py-3 px-7 bg-gray-100' variant='outline' onClick={handleSignIn} >Sign in</Button>
-                    <Button className='rounded-md font-semibold font-tertiary py-3 px-7' onClick={handleGetStarted}>Get Started</Button>
+                    <Button className='rounded-md font-semibold font-tertiary py-3 px-7 bg-gray-100 cursor-pointer' variant='outline' onClick={handleSignIn} >Sign in</Button>
+                    <Button className='rounded-md font-semibold font-tertiary py-3 px-7 cursor-pointer' onClick={handleGetStarted}>Get Started</Button>
                 </div>
             </div>
             <div className='flex flex-col items-center gap-10 justify-center h-full bg-gray-50'>
