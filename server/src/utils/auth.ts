@@ -35,6 +35,10 @@ export const auth = betterAuth({
     }),
     session: {
         expiresIn: 2 * 86400,
+        cookieCache: {
+            enabled: true,
+            maxAge: 5 * 60
+        }
     },
     advanced: {
         cookiePrefix: 'sync',
