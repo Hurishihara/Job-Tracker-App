@@ -1,8 +1,11 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, Verification } from "better-auth";
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { user, session, account, verification } from '../db/schema';
 import { db } from "../db/db";
-import { bearer, openAPI } from 'better-auth/plugins'
+import { transporter } from "../emails/email";
+import { renderToStaticMarkup } from "react-dom/server";
+import VerificationEmail from "../emails/VerificationEmail";
+import { render } from "@react-email/components";
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -33,6 +36,19 @@ export const auth = betterAuth({
     },
     emailAndPassword: {
         enabled: true,
+        requireEmailVerification: true,
+    },
+    emailVerification:{
+        sendVerificationEmail: async ({ user, url, token }, request) =>{
+            await transporter.sendMail({
+                from: 'apptraqify@gmail.com',
+                to: user.email,
+                subject: 'Verify your email address',
+                html: renderToStaticMarkup(VerificationEmail({ email: user.email, username: user.name, token: token }) )
+            })
+        },
+        sendOnSignUp: true,
+        autoSignInAfterVerification: true,
     },
     trustedOrigins: ['http://localhost:5173'],
 })

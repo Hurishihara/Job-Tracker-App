@@ -46,7 +46,16 @@ const RegisterPage = () => {
     const toastId = toast.loading('Creating your account...')
     try {
         await api.post('/auth/sign-up', { username, email, password })
-        toast.success("Account created successfully!", { id: toastId });
+        toast.success('Account created successfully!', {
+            description: 'Please check your email to verify your account.',
+            className: 'font-tertiary text-lg font-bold',
+            descriptionClassName: 'font-tertiary text-md font-semibold',
+            id: toastId,
+            duration: 2000
+        })
+        setTimeout(() => {
+            navigate('/login')
+        }, 2000)
         setLoading(false)
     }
     catch (err) {
@@ -95,7 +104,7 @@ const RegisterPage = () => {
                                                     <FormControl>
                                                         <Input disabled={loading} className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., LemonBanana042' type='text'  {...field} />
                                                     </FormControl>
-                                                    <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Username</FormLabel>
+                                                    <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-50 rounded-lg px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Username</FormLabel>
                                                 </FormItem>
                                         )}
                                         />
@@ -104,7 +113,7 @@ const RegisterPage = () => {
                                                     <FormControl>
                                                         <Input disabled={loading} className='font-tertiary p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='e.g., test@gmail.com' type='email'  {...field} />
                                                     </FormControl>
-                                                    <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Email</FormLabel>
+                                                    <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-50 rounded-lg px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Email</FormLabel>
                                                 </FormItem>
                                         )}
                                         />
@@ -113,7 +122,7 @@ const RegisterPage = () => {
                                                 <FormControl>
                                                     <Input disabled={loading} className='p-[1.5rem] ring-0 border-2 focus:!border-black focus-visible:ring-offset-0 focus-visible:ring-0' placeholder='' type='password'  {...field} />
                                                 </FormControl>
-                                                <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-background px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Password</FormLabel>
+                                                <FormLabel className={cn('font-tertiary peer-focus:secondary peer-focus:dark:secondary absolute start-3 top-1 z-10 origin-[0] -translate-y-4 scale-75 transform bg-gray-50 rounded-lg px-2 text-sm text-gray-500 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:px-2 dark:bg-background rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4 cursor-text text-lg peer-focus:text-black')}>Password</FormLabel>
 
                                             </FormItem>
                                         )}

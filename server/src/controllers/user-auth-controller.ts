@@ -1,7 +1,7 @@
 import Elysia, { redirect, t } from 'elysia';
 import { auth } from '../utils/auth';
 import { BetterAuthError } from 'better-auth';
-import { BadRequestError, InternalServerError, UnauthorizedError } from '../utils/error';
+import { BadRequestError, ForbiddenError, InternalServerError, UnauthorizedError } from '../utils/error';
 
 
 
@@ -31,9 +31,12 @@ export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/au
         catch (err: unknown) {
             if (err instanceof BetterAuthError || err instanceof Error) {
                 if (err.message === 'Invalid email or password' || err.message === 'User not found') {
-                    throw new UnauthorizedError('Invalid email or password', 'Unauthorized');
+                    throw new UnauthorizedError('Invalid email or password', 'Login failed');
                 }
-                throw new InternalServerError('Something went wrong', 'Internal Server Error');
+                else if (err.message === 'Email not verified') {
+                    throw new ForbiddenError('Check your email for verification.', 'Email not verified');
+                }
+                throw new InternalServerError('Something went wrong', 'Oops! Unexpected error occurred');
             }
         }
     }, {
@@ -81,6 +84,31 @@ export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/au
         detail: {
             summary: 'Sign up for the application',
             description: 'Create a new user account',
+            tags: ['Authentication']
+        }
+    })
+    .post('/verify-email', async ({ set, body }) => {
+        try {
+            const { token } = body;
+            const res = await auth.api.verifyEmail({
+                query: { token },
+            })
+            set.status = 200;
+            return res
+        }
+        catch (err) {
+            set.status = 500;
+            console.log(err)
+        }
+    }, {
+        body: t.Object({
+            token: t.String({ error () {
+                throw new BadRequestError('Invalid token', 'Bad Request')
+            }})
+        }),
+        detail: {
+            summary: 'Verify email address',
+            description: 'Verify the user\'s email address',
             tags: ['Authentication']
         }
     })

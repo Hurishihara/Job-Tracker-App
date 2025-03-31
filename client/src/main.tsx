@@ -11,6 +11,7 @@ import Applications from './pages/Applications.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import LandingPage from './LandingPage.tsx'
 import { Toaster } from 'sonner'
+import VerifyEmail from './VerifyEmail.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path='/' element={<LandingPage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/sign-up' element={<RegisterPage />} />
+          <Route path='/verify-email/:email' element={<VerifyEmail />} />
           <Route element={<Private />}>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/applications' element={<Applications />} />

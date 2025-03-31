@@ -3,6 +3,7 @@ import { betterAuthMiddleware } from "../middlewares/auth-middleware";
 import { ChartDataService } from "../services/chart-data-service";
 import { UnauthorizedError } from "../utils/error";
 import { StatusCodes } from "http-status-codes";
+import { auth } from "../utils/auth";
 
 export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix: '/chart-data' })
     .use(betterAuthMiddleware)
