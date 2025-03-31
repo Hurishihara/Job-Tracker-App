@@ -1,4 +1,4 @@
-import { LayoutDashboard, ChartArea, Briefcase, LogOut } from "lucide-react"
+import { LayoutDashboard, ChartArea, Briefcase, LogOut, MoreVerticalIcon, LogOutIcon } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -9,30 +9,30 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { Avatar, AvatarImage } from "./avatar"
-import whitelogo from "@/assets/sidebarlogo.png"
-import { authClient } from "@/util/auth-client"
-import { useNavigate } from "react-router-dom"
-import { useAuth } from "@/auth/AuthContext"
-import { toast } from "sonner"
+  useSidebar,
+} from '@/components/ui/sidebar'
+import whitelogo from '@/assets/sidebarlogo.png'
+import { authClient } from '@/util/auth-client'
+import { useAuth } from '@/auth/AuthContext'
+import { toast } from 'sonner'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './dropdown-menu'
 
 
 // Menu items.
 const items = [
   {
-    title: "Dashboard",
-    url: "/dashboard",
+    title: 'Dashboard',
+    url: '/dashboard',
     icon: LayoutDashboard,
   },
   {
-    title: "Applications",
+    title: 'Applications',
     url: '/applications',
     icon: Briefcase,
   },
   {
-    title: "Analytics",
-    url: "/analytics",
+    title: 'Analytics',
+    url: '/analytics',
     icon: ChartArea,
   },
 ]
@@ -40,6 +40,7 @@ const items = [
 export function AppSidebar() {
 
   const { setIsAuthenticated } = useAuth()
+  const { isMobile } = useSidebar()
 
   const handleClick = async () => {
     await authClient.signOut({
@@ -70,7 +71,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className='gap-5'>
               {items.map((item) => (
-                <SidebarMenuItem className='font-primary text-gray-500 font-semibold' key={item.title}>
+                <SidebarMenuItem className='font-primary text-muted-foreground font-semibold' key={item.title}>
                   <SidebarMenuButton className='p-5' asChild>
                     <a href={item.url}>
                       <item.icon style={{ width: 20, height: 20 }} strokeWidth={2} className='text-black' />
@@ -83,13 +84,42 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className='hover:bg-gray-100 px-[1.5rem] my-[1.5rem] mx-2 cursor-pointer rounded-md' onClick={handleClick}>
-        <div className='flex flex-row items-center text-[1.2rem] gap-2 font-primary text-gray-500 font-semibold hover:text-black'>
-          <LogOut style={{ width: 20, height: 20 }} strokeWidth={2} className='text-black' />
-          <div>
-            Sign out
-          </div>
-        </div>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton size='lg' className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'>
+                  <div className='grid flex-1 text-left text-sm leading-tight'>
+                    <span className='truncate font-medium'>John doe</span>
+                    <span className='truncate text-xs text-muted-foreground'>johndoe@gmail.com</span>
+                  </div>
+                  <MoreVerticalIcon className='ml-auto size-4' />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+              className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg' 
+              side={ isMobile ? 'bottom' : 'right' } 
+              align='end'
+              sideOffset={4}
+              >
+                <DropdownMenuLabel className='p-0 font-normal'>
+                  <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+                    <div className='grid flex-1 text-left text-sm leading-tight'>
+                      <span className='truncate font-bold font-primary'>John Doe</span>
+                      <span className='truncate text-xs font-semibold text-muted-foreground font-primary font-medium'>johndoe@gmail.com</span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className='font-primary font-semibold text-sm text-muted-foreground' onClick={handleClick}>
+                  <LogOutIcon className='text-black' />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   )

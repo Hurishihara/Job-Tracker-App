@@ -1,11 +1,27 @@
-import { betterAuth, Verification } from "better-auth";
+import { betterAuth, BetterAuthOptions } from "better-auth";
+import { customSession } from "better-auth/plugins";
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { user, session, account, verification } from '../db/schema';
 import { db } from "../db/db";
 import { transporter } from "../emails/email";
 import { renderToStaticMarkup } from "react-dom/server";
 import VerificationEmail from "../emails/VerificationEmail";
-import { render } from "@react-email/components";
+
+
+const options = {
+    plugins: [
+        customSession(async ({ user, session }) => {
+            return {
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                },
+                session
+            }
+        })
+    ]
+} satisfies BetterAuthOptions
 
 export const auth = betterAuth({
     database: drizzleAdapter(db, {
@@ -51,4 +67,18 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true,
     },
     trustedOrigins: ['http://localhost:5173'],
+    ...options,
+    plugins: [
+        ...(options.plugins ?? []),
+        customSession(async ({ user, session }) => {
+            return {
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                },
+                session
+            }
+        }, options)
+    ]
 })

@@ -1,4 +1,3 @@
-
 import { ChartDataType } from '@/types/chart-types'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'

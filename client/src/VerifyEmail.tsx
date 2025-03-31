@@ -3,11 +3,10 @@ import { useNavigate, useParams } from "react-router-dom"
 import { api } from "./util/axios-config";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/ui/card";
 import { Button } from "./components/ui/button";
-import { Check, CheckCircle, CircleX } from "lucide-react";
-import { Input } from "./components/ui/input";
+import { CheckCircle, CircleX } from "lucide-react";
 import { authClient } from "./util/auth-client";
 import image1 from './assets/traqifylogo.png'
-import whitelogo from './assets/logo-white.png'
+
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
@@ -35,9 +34,6 @@ const VerifyEmail = () => {
                     token: token
                 });
                 setMessage('Email verified successfully! You can now sign in.');
-                //setTimeout(() => {
-                    //navigate('/sign-in');
-                //}, 3000); // Redirect after 3 seconds
             }
             catch (error) {
                 console.error('Error verifying email:', error);
