@@ -6,10 +6,12 @@ export const usePieChartStore = create(
     persist<{
         pieChartData: ChartDataType[],
         setPieChartData: (data: ChartDataType[]) => void
+        clearPieChartData: () => void
     }>(
         (set) => ({
             pieChartData: [],
-            setPieChartData: (data) => set({ pieChartData: data })
+            setPieChartData: (data) => set({ pieChartData: data }),
+            clearPieChartData: () => localStorage.removeItem('pieChartData')
         }),
         {
             name: 'pieChartData',

@@ -7,10 +7,12 @@ export const useBarChartStore = create(
     persist<{
         barChartData: BarChartData[],
         setBarChartData: (data: BarChartData[]) => void
+        clearBarChartData: () => void
     }>(
         (set) => ({
             barChartData: [],
-            setBarChartData: (data) => set({ barChartData: data })
+            setBarChartData: (data) => set({ barChartData: data }),
+            clearBarChartData: () => localStorage.removeItem('barChartData')
         }),
         {
             name: 'barChartData'

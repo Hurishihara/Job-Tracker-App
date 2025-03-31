@@ -6,10 +6,12 @@ export const useLineChartStore = create(
     persist<{
         lineChartData: LineChartData[],
         setLineChartData: (data: LineChartData[]) => void
+        clearLineChartData: () => void
     }>(
         (set) => ({
             lineChartData: [],
-            setLineChartData: (data) => set({ lineChartData: data })
+            setLineChartData: (data) => set({ lineChartData: data }),
+            clearLineChartData: () => localStorage.removeItem('lineChartData')
         }),
         {
             name: 'lineChartData'

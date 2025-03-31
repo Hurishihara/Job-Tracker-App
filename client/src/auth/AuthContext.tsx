@@ -11,19 +11,17 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const { user, setUser } = useUserStore()
+    const { setUser } = useUserStore()
     const [ isAuthenticated , setIsAuthenticated ] = useState<boolean>(false);
     const [ loading, setLoading ] = useState<boolean>(true);
     const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
     useEffect(() => {
-
         const checkAuth = async () => {
             try {
                 const { data: session } = await authClient.getSession();
                 if (session?.user) {
-                    console.log('User is authenticated', session.session);
-                    await delay(1000); // Simulate a delay for loading state
+                    await delay(1000);
                     setIsAuthenticated(true);
                     setUser({
                         id: session.user.id,

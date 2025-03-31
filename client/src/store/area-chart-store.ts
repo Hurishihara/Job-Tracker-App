@@ -6,10 +6,12 @@ export const useAreaChartStore = create(
     persist<{
         areaChartData: AreaChartData[],
         setAreaChartData: (data: AreaChartData[]) => void
+        clearAreaChartData: () => void
     }>(
         (set) => ({
             areaChartData: [],
-            setAreaChartData: (data) => set({ areaChartData: data })
+            setAreaChartData: (data) => set({ areaChartData: data }),
+            clearAreaChartData: () => localStorage.removeItem('areaChartData')
         }),
         {
             name: 'areaChartData'
