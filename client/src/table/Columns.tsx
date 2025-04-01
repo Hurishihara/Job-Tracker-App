@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { api } from "@/util/axios-config"
 import { ColumnDef } from "@tanstack/react-table"
-import { formatDate, set } from "date-fns"
+import { formatDate } from "date-fns"
 import { ArrowUpDown, BriefcaseBusiness, Delete, MoreHorizontal, PencilLine } from "lucide-react"
 import JobApplicationSheet from "./AddJobApplicationSheet"
 import { useState } from "react"
-import { JobApplicationData, JobApplicationDataWithId } from "@/schemas/formSchema"
+import { JobApplicationDataWithId } from "@/schemas/formSchema"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 export type JobApplication = {
@@ -118,7 +118,7 @@ export const columns: ColumnDef<JobApplication>[] = [
         accessorKey: 'notes',
         header: () => <div className='font-primary font-bold'> Notes </div>,
         cell: ({ row }) => {
-            return <div className='font-secondary text-md'> {row.getValue('notes')} </div>
+            return <div className='font-secondary text-md max-w-xs truncate' > {row.getValue('notes')} </div>
         }
     },
     {
@@ -128,9 +128,11 @@ export const columns: ColumnDef<JobApplication>[] = [
             const jobApplication = row.original
             const [ selectedJobApplication, setSelectedJobApplication ] = useState<JobApplicationDataWithId | undefined>(undefined)
             const [ isSheetOpen, setIsSheetOpen ] = useState(false)
+
             const deleteRow = async () => {
                 await api.delete(`/job-application/delete-job-application/${jobApplication.id}`)
             }
+            
             const openEditSheet = async () => {
                 setSelectedJobApplication({
                     id: jobApplication.id,
@@ -166,7 +168,10 @@ export const columns: ColumnDef<JobApplication>[] = [
                                     </div>
                                 </SheetTrigger>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={deleteRow}> <Delete className='text-black' /> Delete </DropdownMenuItem>
+                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={deleteRow}>
+                                <Delete className='text-black' /> 
+                                Delete
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                     <SheetContent side="left" className="p-3 min-w-[30rem]">

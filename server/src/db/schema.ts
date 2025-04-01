@@ -62,7 +62,7 @@ export const jobApplication = pgTable('job_applications', {
     jobType: jobTypeEnum().notNull(),
     applicationMethod: varchar('application_method', { length: 50 }).notNull(),
     jobLink: text('job_link'),
-    notes: varchar('notes', { length: 60 }),
+    notes: varchar('notes', { length: 150 }),
     userId: text('user_id').references(() => user.id, { onDelete: 'cascade' }).notNull(),
 })
 

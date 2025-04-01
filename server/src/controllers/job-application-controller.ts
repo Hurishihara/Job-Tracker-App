@@ -30,8 +30,8 @@ export const _createJobApplication = createInsertSchema(table.jobApplication, {
         Seasonal: 'Seasonal'
     }),
     applicationMethod: t.String({ minLength: 1, maxLength: 50 }),
-    jobLink: t.Optional(t.String({ format: 'uri'})),
-    notes: t.Optional(t.String({ maxLength: 60})),
+    jobLink: t.Optional(t.String({ format: 'uri' })),
+    notes: t.Optional(t.String({ maxLength: 150 })),
     userId: t.String()
 })
 

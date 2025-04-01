@@ -21,7 +21,7 @@ export const createJobApplicationSchema = z.object({
     jobType: z.enum(['Full-time', 'Part-time', 'Internship', 'Contractual', 'Freelance', 'Temporary', 'Gig', 'Seasonal']),
     applicationMethod: z.string().min(1, 'Application method is required').max(50, 'Application method must be at most 50 characters long'),
     jobLink: z.string().trim().url({ message: 'Invalid URL'}).optional(),
-    notes: z.string().trim().max(60, 'Notes must be at most 60 characters long').optional()
+    notes: z.string().trim().max(150, 'Notes must be at most 150 characters long').optional()
 })
 
 export type JobApplicationData = z.infer<typeof createJobApplicationSchema>
