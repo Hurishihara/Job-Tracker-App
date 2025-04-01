@@ -1,14 +1,18 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { api } from "@/util/axios-config"
 import { ColumnDef } from "@tanstack/react-table"
-import { formatDate } from "date-fns"
-import { ArrowUpDown, BriefcaseBusiness, Delete, MoreHorizontal, PencilLine } from "lucide-react"
+import { formatDate, set } from "date-fns"
+import { ArrowUpDown, BriefcaseBusiness, BriefcaseBusinessIcon, BuildingIcon, CalendarIcon, ClipboardIcon, ClockIcon, DeleteIcon, EyeIcon, LinkIcon, MapPinIcon, MoreHorizontal, NotepadTextIcon, PencilLineIcon } from "lucide-react"
 import JobApplicationSheet from "./AddJobApplicationSheet"
 import { useState } from "react"
 import { JobApplicationDataWithId } from "@/schemas/formSchema"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
 
 export type JobApplication = {
     id: string,
@@ -111,7 +115,13 @@ export const columns: ColumnDef<JobApplication>[] = [
         accessorKey: 'Job Link',
         header: () => <div className='font-primary font-bold'> Job Link </div>,
         cell: ({ row }) => {
-            return <div className='font-secondary text-md'> {row.getValue('Job Link')} </div>
+            const jobLink = row.getValue('Job Link') as string
+            return <a 
+            href={jobLink} 
+            target='_blank' 
+            className="font-secondary text-md max-w-sm truncate relative after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-black after:transition-all after:duration-400 hover:after:w-full" >
+                {jobLink}
+            </a>
         } 
     },
     {
@@ -128,6 +138,7 @@ export const columns: ColumnDef<JobApplication>[] = [
             const jobApplication = row.original
             const [ selectedJobApplication, setSelectedJobApplication ] = useState<JobApplicationDataWithId | undefined>(undefined)
             const [ isSheetOpen, setIsSheetOpen ] = useState(false)
+            const [ isDialogOpen, setIsDialogOpen ] = useState(false)
 
             const deleteRow = async () => {
                 await api.delete(`/job-application/delete-job-application/${jobApplication.id}`)
@@ -147,11 +158,15 @@ export const columns: ColumnDef<JobApplication>[] = [
                     jobLink: jobApplication["Job Link"],
                     notes: jobApplication.notes
                 })
-                setIsSheetOpen(true)
+                setIsSheetOpen(!isSheetOpen)
             } 
+
+            const openView = () => {
+                setIsDialogOpen(!isDialogOpen)
+            }
+
             return (
                 <>
-                <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen} >
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <Button variant='ghost' className='h-8 w-8 p-0'>
@@ -161,34 +176,140 @@ export const columns: ColumnDef<JobApplication>[] = [
                         </DropdownMenuTrigger>
                         <DropdownMenuContent  side='bottom' align='end' className='font-tertiary' >
                             <DropdownMenuLabel className='font-semibold'> Actions </DropdownMenuLabel>
-                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={openEditSheet} >
-                                <SheetTrigger asChild>
-                                    <div className='flex flex-row items-center gap-2'>
-                                        <PencilLine className='text-black' /> Edit
-                                    </div>
-                                </SheetTrigger>
+                            <DropdownMenuItem className='text-muted-foreground font-medium' onClick={openView}>
+                                    <EyeIcon className='text-black' />
+                                    View
                             </DropdownMenuItem>
-                            <DropdownMenuItem className='text-gray-600 font-medium' onClick={deleteRow}>
-                                <Delete className='text-black' /> 
+                            <DropdownMenuItem className='text-muted-foreground font-medium' onClick={openEditSheet} >
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <PencilLineIcon className='text-black' /> Edit
+                                    </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className='text-muted-foreground font-medium' onClick={deleteRow}>
+                                <DeleteIcon className='text-black' /> 
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <SheetContent side="left" className="p-3 min-w-[30rem]">
-                        <SheetHeader>
-                            <SheetTitle>
-                                <BriefcaseBusiness style={{ height: 35, width: 35 }} className="text-gray-600" />
-                            </SheetTitle>
-                            <SheetTitle className='text-black font-primary font-bold text-xl'>
-                                Update an Existing Job Application
-                            </SheetTitle>
-                            <SheetDescription className='font-secondary font-semibold text-md'>
-                                Edit the form below to update an existing job application.
-                            </SheetDescription>
-                        </SheetHeader>
-                        <JobApplicationSheet jobApplication={selectedJobApplication} />
-                    </SheetContent>
-                </Sheet>
+                        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                            <SheetContent side="left" className="p-3 min-w-[30rem]">
+                                <SheetHeader>
+                                    <SheetTitle>
+                                        <BriefcaseBusiness style={{ height: 35, width: 35 }} className="text-gray-600" />
+                                    </SheetTitle>
+                                    <SheetTitle className='text-black font-primary font-bold text-xl'>
+                                        Update an Existing Job Application
+                                    </SheetTitle>
+                                    <SheetDescription className='font-secondary font-semibold text-md'>
+                                        Edit the form below to update an existing job application.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <JobApplicationSheet jobApplication={selectedJobApplication} />
+                            </SheetContent>
+                        </Sheet>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} >
+                        <DialogContent autoFocus={false}>
+                            <DialogHeader>
+                                <DialogTitle className='font-primary font-bold text-xl'> Job Application Details </DialogTitle>
+                                    <DialogDescription className='font-secondary font-semibold text-md'>
+                                        View the details of the job application.
+                                    </DialogDescription>
+                            </DialogHeader>
+                            <Separator className='my-2' /> 
+                            <div className='grid grid-cols-12 gap-5'>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Company name </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                    <BuildingIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['Company Name']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Job Title </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                    <BriefcaseBusinessIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['Job Title']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Location </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <MapPinIcon />
+                                        <Input className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['location']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Application Date </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                    <CalendarIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={formatDate(new Date(jobApplication['Application Date'] as string), 'MM-dd-yyyy')}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Interview Date </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                    <CalendarIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={formatDate(new Date(jobApplication['Interview Date'] as string), 'MM-dd-yyyy')}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Job Type </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <ClockIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['Job Type']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Application Method </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <ClipboardIcon />
+                                        <Input 
+                                        className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['Application Method']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                                <div className='col-span-6 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Job Link </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <LinkIcon />
+                                        <Input className='font-secondary font-semibold text-black p-5 bg-gray-100' 
+                                        readOnly 
+                                        value={jobApplication['Job Link']}
+                                         />
+                                    </div>
+                                </div>
+                                <div className='col-span-12 flex flex-col items-center gap-2'>
+                                    <label className='font-primary font-bold max-w-sm text-muted-foreground'> Notes </label>
+                                    <div className='flex flex-row items-center gap-2'>
+                                        <NotepadTextIcon />
+                                        <Textarea 
+                                        className='font-secondary w-[25rem] resize-none font-semibold text-black p-5 bg-gray-100' 
+                                        value={jobApplication['notes']}
+                                        readOnly />
+                                    </div>
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>  
                 </>
             )
         }

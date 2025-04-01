@@ -21,6 +21,7 @@ import { toast } from 'sonner'
 const LoginPage = () => {
     const navigate = useNavigate();
     const { setIsAuthenticated } = useAuth();
+    const { isAuthenticated } = useAuth()
     const form = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -31,6 +32,18 @@ const LoginPage = () => {
 
     const handleOnSubmit = async ({ email, password }: z.infer<typeof loginSchema>) => {
         try {
+
+            if (isAuthenticated) {
+                toast.info('You are already logged in', {
+                    description: 'Redirecting to your dashboard...',
+                    className: 'font-tertiary text-lg font-bold',
+                    descriptionClassName: 'font-tertiary text-md font-semibold',
+                    duration: 1500,
+                })
+                setTimeout(() => navigate('/dashboard'), 1500)
+                return;
+            }
+        
             const { data } = await api.post('/auth/sign-in', { email, password })
             toast.success('Login successful', {
                 description: 'Welcome back! Redirecting to your dashboard...',
@@ -40,7 +53,7 @@ const LoginPage = () => {
             setIsAuthenticated(true)
             if (data.redirect && data.url) {
                 setTimeout(() => navigate('/dashboard'), 1500)
-                return
+                return;
             }
         }
         catch (err: unknown) {
@@ -54,7 +67,7 @@ const LoginPage = () => {
             else {
                 console.error('An unexpected error occurred:', err)
                 toast.error('An unexpected error occurred. Please try again later.', {
-                    duration: 3000,
+                    duration: 1500,
                 })
             }
         }
