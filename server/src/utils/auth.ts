@@ -70,7 +70,7 @@ export const auth = betterAuth({
         sendOnSignUp: true,
         autoSignInAfterVerification: true,
     },
-    trustedOrigins: ['http://localhost:5173'],
+    trustedOrigins: ['http://localhost:5173' , 'https://traqify-uqkb.onrender.com', 'https://traqify.live'],
     ...options,
     plugins: [
         ...(options.plugins ?? []),
