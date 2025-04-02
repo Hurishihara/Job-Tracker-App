@@ -48,8 +48,9 @@ export const auth = betterAuth({
                 attributes: {
                     httpOnly: true,
                     secure: true,
-                    sameSite: 'lax',
+                    sameSite: 'none',
                     path: '/',
+                    domain: process.env.NODE_ENV === 'production' ? 'traqify.live' : 'localhost',
                 }
             }
         }
@@ -70,7 +71,6 @@ export const auth = betterAuth({
         sendOnSignUp: true,
         autoSignInAfterVerification: true,
     },
-    trustedOrigins: ['http://localhost:5173' , 'https://traqify-uqkb.onrender.com', 'https://traqify.live'],
     ...options,
     plugins: [
         ...(options.plugins ?? []),
