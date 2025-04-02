@@ -3,6 +3,6 @@ import { customSessionClient } from 'better-auth/client/plugins'
 import type { auth } from '../../../server/src/utils/auth'
 
 export const authClient = createAuthClient({
-    baseURL: 'http://localhost:8000',
+    baseURL: import.meta.env.VITE_API_URL,
     plugins: [ customSessionClient<typeof auth>()]
 })
