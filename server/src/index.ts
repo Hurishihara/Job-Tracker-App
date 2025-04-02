@@ -38,7 +38,7 @@ const app = new Elysia()
   }))
   .all('/api/auth/*', betterAuthView)
   .use(router)
-  .listen(8000); 
+  .listen(process.env.PORT || 8000); 
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
