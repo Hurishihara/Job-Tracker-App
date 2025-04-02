@@ -50,7 +50,7 @@ export const auth = betterAuth({
                     secure: true,
                     sameSite: 'none',
                     path: '/',
-                    domain: process.env.NODE_ENV === 'production' ? 'traqify.live' : 'localhost',
+                    domain: 'traqify.live',
                 }
             }
         }
