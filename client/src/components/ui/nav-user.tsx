@@ -1,5 +1,5 @@
 import { useAuth } from "@/auth/AuthContext";
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "./sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./sidebar";
 import { useUserStore } from "@/store/user-store";
 import { useAreaChartStore } from "@/store/area-chart-store";
 import { useBarChartStore } from "@/store/bar-chart-store";
@@ -43,8 +43,6 @@ const NavUser = ({ user }: {
           }
         })
       }
-
-    const isMobile = useSidebar()
 
     return (
         <SidebarMenu>
