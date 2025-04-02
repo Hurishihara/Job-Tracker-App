@@ -50,7 +50,6 @@ export const auth = betterAuth({
                     secure: true,
                     sameSite: 'none',
                     path: '/',
-                    domain: 'traqify.live',
                 }
             }
         }
