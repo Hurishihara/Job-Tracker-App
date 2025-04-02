@@ -31,11 +31,14 @@ export const userAuthRoutes = new Elysia({ name: 'Controller.Auth', prefix: '/au
         catch (err: unknown) {
             if (err instanceof BetterAuthError || err instanceof Error) {
                 if (err.message === 'Invalid email or password' || err.message === 'User not found') {
+                    console.error('Error:', err)
                     throw new UnauthorizedError('Invalid email or password', 'Login failed');
                 }
                 else if (err.message === 'Email not verified') {
+                    console.error('Error:', err)
                     throw new ForbiddenError('Check your email for verification.', 'Email not verified');
                 }
+                console.error('Error:', err)
                 throw new InternalServerError('Something went wrong', 'Oops! Unexpected error occurred');
             }
         }

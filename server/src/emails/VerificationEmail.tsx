@@ -56,7 +56,7 @@ export default function VerificationEmail({ token, email, username }: Verificati
                             </Text>
                             <Section className='mt-14'>
                                 <Button
-                                    href={`http://localhost:5173/verify-email/${email}?token=${token}`}
+                                    href={`https://traqify.live/verify-email/${email}?token=${token}`}
                                     className='bg-black text-white font-semibold py-3 px-10 rounded-md hover:bg-red-500 font-tertiary'
                                     
                                 >

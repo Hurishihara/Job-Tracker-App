@@ -3,10 +3,12 @@ import { Elysia } from 'elysia';
 import { router } from './routes/route';
 import cors from '@elysiajs/cors';
 import betterAuthView from './utils/auth-view';
+import staticPlugin from '@elysiajs/static';
+
 
 const app = new Elysia()
   .use(cors({
-    origin: ['http://localhost:5173,', 'https://traqify-uqkb.onrender.com', 'https://traqify.live'],
+    origin: ['http://localhost:5173', 'https://traqify-uqkb.onrender.com', 'https://traqify.live'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
