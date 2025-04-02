@@ -141,7 +141,7 @@ export const columns: ColumnDef<JobApplication>[] = [
             const [ isDialogOpen, setIsDialogOpen ] = useState(false)
 
             const deleteRow = async () => {
-                await api.delete(`/job-application/delete-job-application/${jobApplication.id}`)
+                await api.delete(`/api/job-application/delete-job-application/${jobApplication.id}`)
             }
             
             const openEditSheet = async () => {
@@ -167,16 +167,16 @@ export const columns: ColumnDef<JobApplication>[] = [
 
             return (
                 <>
-                    <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
                             <Button variant='ghost' className='h-8 w-8 p-0'>
                                 <span className='sr-only'> Open Menu</span>
                                 <MoreHorizontal className='h-4 w-4' />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent  side='bottom' align='end' className='font-tertiary' >
+                        <DropdownMenuContent side='top' align='end' className='font-tertiary' >
                             <DropdownMenuLabel className='font-semibold'> Actions </DropdownMenuLabel>
-                            <DropdownMenuItem className='text-muted-foreground font-medium' onClick={openView}>
+                            <DropdownMenuItem className='text-muted-foreground font-medium cursor-pointer' onClick={openView}>
                                     <EyeIcon className='text-black' />
                                     View
                             </DropdownMenuItem>
@@ -208,8 +208,8 @@ export const columns: ColumnDef<JobApplication>[] = [
                                 <JobApplicationSheet jobApplication={selectedJobApplication} />
                             </SheetContent>
                         </Sheet>
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} >
-                        <DialogContent autoFocus={false}>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}  >
+                        <DialogContent>
                             <DialogHeader>
                                 <DialogTitle className='font-primary font-bold text-xl'> Job Application Details </DialogTitle>
                                     <DialogDescription className='font-secondary font-semibold text-md'>

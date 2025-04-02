@@ -1,22 +1,22 @@
-import { Button } from "@/components/ui/button"
-import { CalendarIcon, Pencil, PencilLine, Plus, } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { SheetFooter } from "@/components/ui/sheet"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
-import { Textarea } from "@/components/ui/textarea"
-import { createJobApplicationSchema, JobApplicationData, JobApplicationDataWithId } from "@/schemas/formSchema"
-import { z } from "zod"
-import { Form, FormField, FormMessage } from "@/components/ui/form"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { api } from "@/util/axios-config"
-import { toast } from "sonner"
-import axios from "axios"
+import { Button } from '@/components/ui/button'
+import { CalendarIcon, Pencil, PencilLine, Plus, } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { SheetFooter } from '@/components/ui/sheet'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
+import { format } from 'date-fns'
+import { Calendar } from '@/components/ui/calendar'
+import { Textarea } from '@/components/ui/textarea'
+import { createJobApplicationSchema, JobApplicationData, JobApplicationDataWithId } from '@/schemas/formSchema'
+import { z } from 'zod'
+import { Form, FormField, FormMessage } from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '@/util/axios-config'
+import { toast } from 'sonner'
+import axios from 'axios'
 
 const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicationDataWithId }) => {
 
@@ -38,18 +38,17 @@ const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicat
     
 
     const handleJobApplicationSubmit = async (value: JobApplicationData) => {
-        const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
+        //const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
         try {
-            await delay(2000);
             if (jobApplication) {
-                await api.patch(`/job-application/update-job-application/${jobApplication.id}`, value)
+                await api.patch(`/api/job-application/update-job-application/${jobApplication.id}`, value)
                 toast.success('Job Application updated successfully!', {
                     className: 'font-tertiary font-semibold',
                     icon: <Pencil />
                 })
                 return;
             }
-            await api.post('/job-application/create-job-application', value)
+            await api.post('/api/job-application/create-job-application', value)
             toast.success('Job Application created successfully!', {
                 className: 'font-tertiary font-semibold',
                 icon: <Plus />
@@ -58,7 +57,6 @@ const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicat
         }
         catch (err) {
             if (err instanceof z.ZodError) {
-                await delay(2000)
                 console.log(err.errors)
             }
             else if (axios.isAxiosError(err)) {
@@ -273,24 +271,24 @@ const JobApplicationSheet = ({ jobApplication, }: { jobApplication?: JobApplicat
                         <Button type='submit' className='text-sm font-tertiary font-medium text-white'>
                             {form.formState.isSubmitting ? (
                                   <svg
-                                    className="animate-spin mr-2"
-                                    fill="none"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    width="20"
-                                    xmlns="http://www.w3.org/2000/svg"
+                                    className='animate-spin mr-2'
+                                    fill='none'
+                                    height='20'
+                                    viewBox='0 0 20 20'
+                                    width='20'
+                                    xmlns='http://www.w3.org/2000/svg'
                                   >
                                     <circle
-                                      cx="10"
-                                      cy="10"
-                                      r="8"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      className="stroke-gray-300"
+                                      cx='10'
+                                      cy='10'
+                                      r='8'
+                                      stroke='currentColor'
+                                      strokeWidth='2'
+                                      className='stroke-gray-300'
                                     />
                                     <path
-                                      fill="currentColor"
-                                      d="M18 10c0 4.4183-3.5817 8-8 8s-8-3.5817-8-8h2c0 3.3137 2.6863 6 6 6s6-2.6863 6-6h2z"
+                                      fill='currentColor'
+                                      d='M18 10c0 4.4183-3.5817 8-8 8s-8-3.5817-8-8h2c0 3.3137 2.6863 6 6 6s6-2.6863 6-6h2z'
                                     />
                                   </svg>
                                 ) : (
