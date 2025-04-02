@@ -1,4 +1,4 @@
-import Elysia, { redirect, t } from 'elysia';
+import Elysia, { t } from 'elysia';
 import { auth } from '../utils/auth';
 import { BetterAuthError } from 'better-auth';
 import { BadRequestError, ForbiddenError, InternalServerError, UnauthorizedError } from '../utils/error';

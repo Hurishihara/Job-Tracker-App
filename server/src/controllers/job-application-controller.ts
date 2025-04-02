@@ -50,7 +50,7 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
         }
         catch (err) {
             console.error('Error in JobApplicationController:', err);
-            throw new InternalServerError('Something went wrong', 'Internal Server Error');
+            throw err
         }
     }, {
         body: t.Omit(_createJobApplication, ['id', 'userId']),
@@ -58,7 +58,12 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
         detail: {
             summary: 'Create a job application',
             description: 'Create a new job application',
-            tags: ['Job Application']
+            tags: ['Job Application'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         },
     })
     .get('/get-job-applications', async ({ user, getJobApplications, set }) => {
@@ -73,14 +78,19 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             }
         catch (err) {
             console.error('Error in JobApplicationController:', err);
-            throw new InternalServerError('Something went wrong', 'Internal Server Error');
+            throw err
         }
     }, {
         auth: true,
         detail: {
             summary: 'Get job applications',
             description: 'Get all job applications for a user',
-            tags: ['Job Application']
+            tags: ['Job Application'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
     .patch('/update-job-application/:id', async ({ user, updateJobApplication, body, params, set }) => {
@@ -93,8 +103,9 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
             set.status = StatusCodes.OK;
             return res;
         } 
-        catch {
-
+        catch (err) {
+            console.error('Error in JobApplicationController:', err);
+            throw err
         }
     }, {
         body: t.Partial(_createJobApplication),
@@ -103,25 +114,41 @@ export const JobApplicationRoutes = new Elysia({ name: 'Controller.JobApplicatio
         detail: {
             summary: 'Update a job application',
             description: 'Update an existing job application',
-            tags: ['Job Application']
+            tags: ['Job Application'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
     .delete('/delete-job-application/:id', async ({ user, deleteJobApplication, params, set }) => {
-       if (!user) {
-            throw new UnauthorizedError('Please log in to delete a job application', 'Unauthorized');
+       try {
+            if (!user) {
+                throw new UnauthorizedError('Please log in to delete a job application', 'Unauthorized');
+            }
+            console.log(user)
+            const jobId = params.id;
+            const res = await deleteJobApplication(jobId);
+            set.status = StatusCodes.OK;
+            return res;
        }
-       console.log(user)
-       const jobId = params.id;
-       const res = await deleteJobApplication(jobId);
-       set.status = StatusCodes.OK;
-       return res;
+       catch (err) {
+            console.error('Error in JobApplicationController:', err);
+            throw err
+       }
     }, {
         params: t.Pick(_createJobApplication, ['id']),
         auth: true,
         detail: {
             summary: 'Delete a job application',
             description: 'Delete an existing job application',
-            tags: ['Job Application']
+            tags: ['Job Application'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
 

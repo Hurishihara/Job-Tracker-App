@@ -19,7 +19,8 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
             return res;
         }
         catch (err) {
-            console.error('Error in ChartDataController:', err);
+            console.error('Error in PieChartDataController:', err);
+            throw err;
         }
     }, {
         auth: true,
@@ -30,7 +31,12 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         detail: {
             summary: 'Get pie chart data',
             description: 'Get pie chart data for a user',
-            tags: ['Chart Data']
+            tags: ['Chart Data'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
     .get('/get-line-chart-data', async ({ user, getLineChartData, set, query }) => {
@@ -44,7 +50,8 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
             return res;
         }
         catch (err) {
-            console.error('Error in ChartDataController:', err);
+            console.error('Error in LineChartDataController:', err);
+            throw err;
         }
     }, {
         auth: true,
@@ -55,7 +62,12 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         detail: {
             summary: 'Get line chart data',
             description: 'Get line chart data for a user',
-            tags: ['Chart Data']
+            tags: ['Chart Data'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
     .get('/get-bar-chart-data', async ({ user, getBarChartData, set, query }) => {
@@ -69,7 +81,8 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
             return res;
         }
         catch (err) {
-            console.error('Error in ChartDataController:', err);
+            console.error('Error in BarChartDataController:', err);
+            throw err;
         }
     }, {
         auth: true,
@@ -80,7 +93,12 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         detail: {
             summary: 'Get bar chart data',
             description: 'Get bar chart data for a user',
-            tags: ['Chart Data']
+            tags: ['Chart Data'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })
     .get('/get-area-chart-data', async ({ user, getAreaChartData, set, query }) => {
@@ -94,7 +112,8 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
             return res;
         }
         catch (err) {
-            console.error('Error in ChartDataController:', err);
+            console.error('Error in AreaChartDataController:', err);
+            throw err;
         }
     }, {
         auth: true,
@@ -105,6 +124,11 @@ export const ChartDataRoutes = new Elysia({ name: 'Controller.ChartData', prefix
         detail: {
             summary: 'Get area chart data',
             description: 'Get area chart data for a user',
-            tags: ['Chart Data']
+            tags: ['Chart Data'],
+            security: [
+                {
+                    sessionAuth: []
+                }
+            ]
         }
     })

@@ -11,7 +11,31 @@ const app = new Elysia()
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   }))
-  .use(swagger())
+  .use(swagger({
+    documentation: {
+      info: {
+        title: 'Job Tracker API',
+        description: 'API documentation for the Job Tracker application',
+        version: '1.0.0',
+      },
+      tags: [
+        { name: 'Authentication', description: 'Authentication related endpoints' },
+        { name: 'Job Application', description: 'Job application related endpoints' },
+        { name: 'Charts', description: 'Charts related endpoints' },
+      ],
+      components: {
+        securitySchemes: {
+          sessionAuth: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'sync.session_token',
+            description: 'Session token for authentication',
+          }
+        }
+      }
+    },
+    path: '/documentation/swagger'
+  }))
   .all('/api/auth/*', betterAuthView)
   .use(router)
   .listen(8000); 
