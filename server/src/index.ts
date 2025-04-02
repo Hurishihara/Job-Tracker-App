@@ -6,7 +6,7 @@ import betterAuthView from './utils/auth-view';
 
 const app = new Elysia()
   .use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173,', 'https://traqify-uqkb.onrender.com'],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
