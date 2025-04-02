@@ -83,5 +83,6 @@ export const auth = betterAuth({
                 session
             }
         }, options)
-    ]
+    ],
+    trustedOrigins: ['http://localhost:5173', 'https://traqify-uqkb.onrender.com', 'https://traqify.live'],
 })
