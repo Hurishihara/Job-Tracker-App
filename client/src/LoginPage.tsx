@@ -44,7 +44,7 @@ const LoginPage = () => {
                 return;
             }
         
-            const { data } = await api.post('/auth/sign-in', { email, password })
+            const { data } = await api.post('/api/auth/sign-in', { email, password })
             toast.success('Login successful', {
                 description: 'Welcome back! Redirecting to your dashboard...',
                 className: 'font-tertiary text-lg font-bold',

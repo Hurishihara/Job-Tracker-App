@@ -16,14 +16,6 @@ import {
 import { useEffect } from "react"
 import { api } from "@/util/axios-config"
 import { useBarChartStore } from "@/store/bar-chart-store"
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
 
 const chartConfig = {
   totalApplications: {
@@ -44,7 +36,7 @@ const CustomBarChart = () => {
     const fetchChartData = async () => {
       try {
         const { startMonth, endMonth } = getCurrentHalfYearRange();
-        const res = await api.get('/chart-data/get-bar-chart-data', {
+        const res = await api.get('/api/chart-data/get-bar-chart-data', {
           params: { startMonth, endMonth }
         })
         setBarChartData(res.data)

@@ -45,7 +45,7 @@ const RegisterPage = () => {
     setLoading(true)
     const toastId = toast.loading('Creating your account...')
     try {
-        await api.post('/auth/sign-up', { username, email, password })
+        await api.post('/api/auth/sign-up', { username, email, password })
         toast.success('Account created successfully!', {
             description: 'Please check your email to verify your account.',
             className: 'font-tertiary text-lg font-bold',

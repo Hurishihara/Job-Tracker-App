@@ -30,7 +30,7 @@ const VerifyEmail = () => {
             }
 
             try {
-                await api.post('/auth/verify-email', {
+                await api.post('/api/auth/verify-email', {
                     token: token
                 });
                 setMessage('Email verified successfully! You can now sign in.');

@@ -16,14 +16,6 @@ import {
 import { useAreaChartStore } from '@/store/area-chart-store'
 import { useEffect } from 'react'
 import { api } from '@/util/axios-config'
-const chartData = [
-  { month: 'January', Days: 0 },
-  { month: 'February', Days: 0 },
-  { month: 'March', Days: 0 },
-  { month: 'April', Days: 0 },
-  { month: 'May', Days: 0 },
-  { month: 'June', Days: 0 },
-]
 
 const chartConfig = {
   Days: {
@@ -46,7 +38,7 @@ const CustomAreaChart = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await api.get('/chart-data/get-area-chart-data', {
+        const res = await api.get('/api/chart-data/get-area-chart-data', {
           params: { startMonth, endMonth }
         })
         const formattedData = res.data.map((item: { month: string, Days: number }) => ({

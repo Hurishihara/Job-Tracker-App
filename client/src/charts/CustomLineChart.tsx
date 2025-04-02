@@ -42,7 +42,7 @@ const CustomLineChart = () => {
         const fetchLineChartData = async () => {
             try {
                 const { startMonth, endMonth } = getCurrentHalfYearRange();
-                const res = await api.get('/chart-data/get-line-chart-data', {
+                const res = await api.get('/api/chart-data/get-line-chart-data', {
                     params: { startMonth, endMonth }
                 })
                 setLineChartData(res.data);

@@ -97,7 +97,7 @@ const CustomPieChart = () => {
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const res = await api.get('/chart-data/get-pie-chart-data', {
+                const res = await api.get('/api/chart-data/get-pie-chart-data', {
                     params: { startMonth, endMonth }
                 })
                 setPieChartData(res.data.data)

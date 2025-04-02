@@ -7,7 +7,7 @@ const CustomTable = ({ pageSize }: any) => {
     const [data, setData] = useState<JobApplication[]>([])
     useEffect(() => {
         const fetchData = async () => {
-            const res = await api.get('/job-application/get-job-applications')
+            const res = await api.get('/api/job-application/get-job-applications')
             setData(res.data.data)
         };
 
