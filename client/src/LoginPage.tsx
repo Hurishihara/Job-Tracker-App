@@ -16,12 +16,14 @@ import { useAuth } from './auth/AuthContext'
 import { BrainCircuit } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { useUserStore } from './store/user-store'
 
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const { setIsAuthenticated } = useAuth();
     const { isAuthenticated } = useAuth()
+    const { setUser } = useUserStore()
     const form = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -51,6 +53,11 @@ const LoginPage = () => {
                 descriptionClassName: 'font-tertiary text-md font-semibold',
             })
             setIsAuthenticated(true)
+            setUser({
+                id: data.user.id,
+                name: data.user.name,
+                email: data.user.email,
+            });
             if (data.redirect && data.url) {
                 setTimeout(() => navigate('/dashboard'), 1500)
                 return;
