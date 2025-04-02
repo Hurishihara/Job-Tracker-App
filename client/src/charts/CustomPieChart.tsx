@@ -119,7 +119,7 @@ const CustomPieChart = () => {
                 <div className='col-span-5'>
                     <ChartContainer config={chartConfig2} className='min-h-[200px] w-full'>
                         <PieChart>
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent className='font-secondary' formatter={(value, name, item ) => {
+                            <ChartTooltip cursor={false} content={<ChartTooltipContent className='font-secondary' formatter={(_, name, item ) => {
                                 return <div className='flex flex-row items-center gap-2.5 text-md font-semibold font-secondary'>
                                     <div className='w-2 h-2 rounded-full' style={{ backgroundColor: item.payload.fill }} />
                                         <span>{name}</span>
