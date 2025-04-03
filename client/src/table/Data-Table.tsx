@@ -9,7 +9,7 @@ import {
     SortingState,
     useReactTable,
     VisibilityState,
-  } from "@tanstack/react-table"
+  } from '@tanstack/react-table'
    
 import {
   Table,
@@ -18,15 +18,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ArrowLeftCircle, ArrowRightCircle, BookOpen, BriefcaseBusiness, Columns2, Plus, TextSearch } from "lucide-react"
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import JobApplicationSheet from "./AddJobApplicationSheet"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+} from '@/components/ui/table'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { ArrowLeftCircle, ArrowRightCircle, BookOpen, Columns2, Plus, TextSearch } from 'lucide-react'
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import AddJobApplication from './sub-components/AddJobApplication'
 
 
 interface DataTableProps<TData, TValue> {
@@ -72,42 +71,29 @@ export function DataTable<TData, TValue>({
     const startRow = currentPage * currentPageSize + 1;
     const endRow = Math.min((currentPage + 1) * currentPageSize, totalRows)
 
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
+
     return (
         <Card className='rounded-2xl shadow-xl sm:min-w-[20rem] md:w-[30rem] lg:w-[46rem] xl:w-[62rem] 2xl:w-[82vw] 3xl:w-[84vw]'>
             <CardContent>
-                <div className='flex items-center py-4 gap-2'>
-                    <div className='relative max-w-sm'>
-                        <Input
-                        placeholder='Filter companies...'
-                        value={(table.getColumn('Company Name')?.getFilterValue() as string) ?? ''}
-                        onChange={(e) => table.getColumn('Company Name')?.setFilterValue(e.target.value)}
-                        className='font-tertiary font-medium px-10 ring-0 border-2 focus:!border-gray-600 focus-visible:ring-offset-0 focus-visible:ring-0' />
-                        <TextSearch className='text-black absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600' />    
+                <div className='flex items-center justify-between py-4 gap-2'>
+                    <div className='flex flex-row items-center gap-2'>
+                        <div className='relative max-w-sm'>
+                            <Input
+                            placeholder='Filter companies...'
+                            value={(table.getColumn('Company Name')?.getFilterValue() as string) ?? ''}
+                            onChange={(e) => table.getColumn('Company Name')?.setFilterValue(e.target.value)}
+                            className='font-tertiary font-medium px-10 ring-0 border-2 focus:!border-gray-600 focus-visible:ring-offset-0 focus-visible:ring-0' />
+                            <TextSearch className='text-black absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600' />    
+                        </div>
+                        <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm' onClick={() => setIsSheetOpen(!isSheetOpen)}>
+                            <Plus className='text-black' /> Create Job Application
+                        </Button>
+                        <AddJobApplication open={isSheetOpen} onSheetChange={setIsSheetOpen} />
                     </div>
-                    <Sheet>
-                        <SheetTrigger>
-                            <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm'>
-                                <Plus className='text-black' /> Create Job Application
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side='left' className='p-3 min-w-[30rem]'>
-                            <SheetHeader>
-                                <SheetTitle>
-                                    <BriefcaseBusiness style={{ height: 35, width: 35 }} className='text-gray-600' />
-                                </SheetTitle>
-                                <SheetTitle className='text-black font-primary font-bold text-xl'>
-                                    Create a New Job Application
-                                </SheetTitle>
-                                <SheetDescription className='font-secondary font semi-bold text-md'>
-                                    Fill out the form below to add a new job application to your list.
-                                </SheetDescription>
-                            </SheetHeader>
-                            <JobApplicationSheet jobApplication={undefined} />
-                        </SheetContent>
-                    </Sheet>
                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant='outline' className='ml-auto text-sm font-medium text-gray-600 font-tertiary'>
+                        <DropdownMenuTrigger>
+                            <Button variant='outline' className='text-sm font-medium text-gray-600 font-tertiary'>
                                 <Columns2 className='text-black'/> Columns 
                                 <div className='flex items-center justify-center bg-black text-white rounded-[0.3rem] text-sm text-black font-tertiary font-medium w-5.5 px-1'>
                                     <span> {table.getVisibleFlatColumns().length} </span>
