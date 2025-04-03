@@ -26,6 +26,7 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import AddJobApplication from './sub-components/AddJobApplication'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 
 interface DataTableProps<TData, TValue> {
@@ -72,44 +73,56 @@ export function DataTable<TData, TValue>({
     const endRow = Math.min((currentPage + 1) * currentPageSize, totalRows)
 
     const [isSheetOpen, setIsSheetOpen] = useState(false)
+    const isMobile = useIsMobile()
 
     return (
-        <Card className='rounded-2xl shadow-xl sm:min-w-[20rem] md:w-[30rem] lg:w-[46rem] xl:w-[62rem] 2xl:w-[82vw] 3xl:w-[84vw]'>
+        <Card className='rounded-2xl shadow-xl base:w-[17rem] basexl:w-[20rem] xs:w-[24rem] sm:w-[37rem] md:w-[30rem] lg:min-w-[46rem] xl:w-[62rem] 2xl:w-[82vw] 3xl:w-[84vw]'>
             <CardContent>
                 <div className='flex items-center justify-between py-4 gap-2'>
-                    <div className='flex flex-row items-center gap-2'>
-                        <div className='relative max-w-sm'>
-                            <Input
-                            placeholder='Filter companies...'
-                            value={(table.getColumn('Company Name')?.getFilterValue() as string) ?? ''}
-                            onChange={(e) => table.getColumn('Company Name')?.setFilterValue(e.target.value)}
-                            className='font-tertiary font-medium px-10 ring-0 border-2 focus:!border-gray-600 focus-visible:ring-offset-0 focus-visible:ring-0' />
-                            <TextSearch className='text-black absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600' />    
-                        </div>
-                        <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm' onClick={() => setIsSheetOpen(!isSheetOpen)}>
-                            <Plus className='text-black' /> Create Job Application
-                        </Button>
-                        <AddJobApplication open={isSheetOpen} onSheetChange={setIsSheetOpen} />
-                    </div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Button variant='outline' className='text-sm font-medium text-gray-600 font-tertiary'>
-                                <Columns2 className='text-black'/> Columns 
-                                <div className='flex items-center justify-center bg-black text-white rounded-[0.3rem] text-sm text-black font-tertiary font-medium w-5.5 px-1'>
-                                    <span> {table.getVisibleFlatColumns().length} </span>
-                                </div>
+                    {isMobile ? (
+                        <div className='flex flex-row items-center gap-15'>
+                            <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm' onClick={() => setIsSheetOpen(!isSheetOpen)}>
+                                <Plus className='text-black' /> Create Job Application
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align='end'>
-                            {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem key={column.id} className='capitalize font-tertiary font-medium' checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            <AddJobApplication open={isSheetOpen} onSheetChange={setIsSheetOpen} />    
+                        </div>
+                    ) : (
+                        <>
+                            <div className='flex flex-row items-center gap-2'>
+                                <div className='relative max-w-sm'>
+                                    <Input
+                                    placeholder='Filter companies...'
+                                    value={(table.getColumn('Company Name')?.getFilterValue() as string) ?? ''}
+                                    onChange={(e) => table.getColumn('Company Name')?.setFilterValue(e.target.value)}
+                                    className='font-tertiary font-medium px-10 ring-0 border-2 focus:!border-gray-600 focus-visible:ring-offset-0 focus-visible:ring-0' />
+                                    <TextSearch className='text-black absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600' />    
+                                </div>
+                                <Button className='text-sm font-tertiary font-medium text-gray-600' variant='outline' size='sm' onClick={() => setIsSheetOpen(!isSheetOpen)}>
+                                    <Plus className='text-black' /> Create Job Application
+                                </Button>
+                                <AddJobApplication open={isSheetOpen} onSheetChange={setIsSheetOpen} />
+                            </div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Button variant='outline' className='text-sm font-medium text-gray-600 font-tertiary'>
+                                        <Columns2 className='text-black'/> Columns 
+                                        <div className='flex items-center justify-center bg-black text-white rounded-[0.3rem] text-sm text-black font-tertiary font-medium w-5.5 px-1'>
+                                            <span> {table.getVisibleFlatColumns().length} </span>
+                                        </div>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align='end'>
+                                    {table.getAllColumns().filter((column) => column.getCanHide()).map((column) => {
+                                        return (
+                                            <DropdownMenuCheckboxItem key={column.id} className='capitalize font-tertiary font-medium' checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                                                {column.id}
+                                            </DropdownMenuCheckboxItem>
+                                        )
+                                    })}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </>
+                    )}
                 </div>
                 <div className='border rounded-xl overflow-hidden'>
                     <Table>

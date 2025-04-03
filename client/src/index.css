@@ -124,6 +124,9 @@
   --font-primary: Urbanist Variable, sans-serif;
   --font-secondary: Manrope Variable, sans-serif;
   --font-tertiary: DM Sans Variable, monospace;
+  --breakpoint-base: 20rem;
+  --breakpoint-basexl: 23.4375rem;
+  --breakpoint-xs: 25.875rem;
   --breakpoint-3xl: 120rem;
 }
 
